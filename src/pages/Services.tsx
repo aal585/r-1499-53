@@ -1,11 +1,12 @@
-
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ServiceCategories from '@/components/ServiceCategories';
 import ServiceBookingForm from '@/components/ServiceBookingForm';
 import FeaturedProviders from '@/components/FeaturedProviders';
-import { Search, MapPin, Filter, Clock, Star, Calendar, ArrowRight } from 'lucide-react';
+import FeaturedServices from '@/components/services/FeaturedServices';
+import ServiceHighlights from '@/components/services/ServiceHighlights';
+import { Search, MapPin, Filter, Clock, Star, Calendar, ArrowRight, Phone, MessageSquare } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import ServiceFilter, { ServiceFilters } from '@/components/services/ServiceFilter';
 import ServiceCard, { ServiceProvider } from '@/components/services/ServiceCard';
 import ServiceCompare from '@/components/services/ServiceCompare';
+import { motion } from 'framer-motion';
 
 const serviceProviders: ServiceProvider[] = [
   {
@@ -110,7 +112,6 @@ const Services = () => {
   const navigate = useNavigate();
   const [filteredProviders, setFilteredProviders] = useState<ServiceProvider[]>(serviceProviders);
 
-  // Apply filters whenever they change
   useEffect(() => {
     let filtered = serviceProviders.filter(provider => 
       provider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -119,19 +120,16 @@ const Services = () => {
       provider.services.some(service => service.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-    // Apply category filters
     if (filters.categories.length > 0) {
       filtered = filtered.filter(provider => 
         filters.categories.includes(provider.category.toLowerCase())
       );
     }
 
-    // Apply availability filters
     if (filters.availability.includes('today')) {
       filtered = filtered.filter(provider => provider.availableToday);
     }
 
-    // Apply rating filters
     if (filters.ratings.length > 0) {
       filtered = filtered.filter(provider => {
         if (filters.ratings.includes('5stars') && provider.rating < 5) return false;
@@ -141,18 +139,15 @@ const Services = () => {
       });
     }
 
-    // Apply tab filtering
     if (activeTab === 'top-rated') {
       filtered = filtered.filter(provider => provider.rating >= 4.8);
     } else if (activeTab === 'available-today') {
       filtered = filtered.filter(provider => provider.availableToday);
     }
 
-    // Apply sorting
     if (filters.sortBy === 'rating') {
       filtered.sort((a, b) => b.rating - a.rating);
     } else if (filters.sortBy === 'price-low' || filters.sortBy === 'price-high') {
-      // In a real app, we'd parse the price properly. This is just for demonstration.
       const getPriceValue = (provider: ServiceProvider) => {
         const priceStr = provider.price || '';
         const match = priceStr.match(/\$(\d+)/);
@@ -165,7 +160,6 @@ const Services = () => {
         filtered.sort((a, b) => getPriceValue(b) - getPriceValue(a));
       }
     } else if (filters.sortBy === 'newest') {
-      // In a real app, we'd sort by created date. For this demo, we'll just reverse the order
       filtered.reverse();
     }
 
@@ -181,22 +175,39 @@ const Services = () => {
       <Navbar />
       
       {/* Hero with gradient background */}
-      <div className="bg-gradient-to-r from-estate-800 to-estate-700 text-white py-16 md:py-20">
+      <div className="bg-gradient-to-r from-estate-800 via-vibrant-purple to-estate-700 text-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-display mb-4 animate-fadeIn">Professional Home Services</h1>
-            <p className="text-estate-200 text-lg mb-8 animate-fadeIn animation-delay-100">
+            <motion.h1 
+              className="text-4xl md:text-5xl font-display mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              Professional Home Services
+            </motion.h1>
+            <motion.p 
+              className="text-estate-200 text-lg mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
               Find trusted professionals for all your home service needs.
-            </p>
+            </motion.p>
             
-            <div className="relative max-w-2xl mx-auto glass-effect rounded-md animate-fadeIn animation-delay-200">
+            <motion.div 
+              className="relative max-w-2xl mx-auto glass-effect rounded-lg"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-estate-400" />
+                <Search className="h-5 w-5 text-white/70" />
               </div>
               <Input
                 type="text"
                 placeholder="Search for services or providers..."
-                className="pl-10 py-6 bg-transparent border-white/30 text-white placeholder:text-white/60 rounded-md focus-visible:ring-white"
+                className="pl-10 py-6 bg-transparent border-white/40 text-white placeholder:text-white/70 rounded-lg focus-visible:ring-white/70"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -206,7 +217,7 @@ const Services = () => {
               >
                 Search
               </Button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -219,12 +230,18 @@ const Services = () => {
         </div>
       </section>
       
+      {/* Featured Services Section */}
+      <FeaturedServices />
+      
       {/* Service Compare Section */}
       <section className="py-8 bg-gray-50">
         <div className="container mx-auto px-4">
           <ServiceCompare providers={serviceProviders} />
         </div>
       </section>
+      
+      {/* Service Highlights Section */}
+      <ServiceHighlights />
       
       {/* Main Content */}
       <section className="py-12 bg-gray-50">
@@ -340,20 +357,27 @@ const Services = () => {
               <ServiceBookingForm />
               
               {/* Quick contact section */}
-              <div className="bg-white p-6 rounded-xl soft-shadow border border-gray-100 mt-6">
+              <motion.div 
+                className="bg-white p-6 rounded-xl soft-shadow border border-gray-100 mt-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
                 <h3 className="text-lg font-semibold text-estate-800 mb-3">Need Help?</h3>
                 <p className="text-estate-600 text-sm mb-4">
                   Our service experts are ready to assist you in finding the perfect service provider for your needs.
                 </p>
                 <div className="flex flex-col space-y-3">
-                  <Button className="w-full bg-accent-amber hover:bg-amber-600">
+                  <Button className="w-full bg-accent-amber hover:bg-amber-600 group">
                     Call Us
+                    <Phone className="w-4 h-4 ml-2 transition-transform group-hover:rotate-12" />
                   </Button>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full group">
                     Send Message
+                    <MessageSquare className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
