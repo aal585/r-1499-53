@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { ServiceBookingForm } from "./ServiceBookingForm";
+import ServiceBookingForm from "./ServiceBookingForm";
 import ServiceCategories from "./ServiceCategories";
 import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
