@@ -25,3 +25,5 @@ export type Property = {
   user_id: string;
   status: 'available' | 'pending' | 'sold';
 };
+
+export type PropertyInsert = Omit<Property, 'id' | 'created_at'>;

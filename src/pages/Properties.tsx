@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PropertyGrid from "@/components/PropertyGrid";
@@ -109,7 +108,6 @@ const Properties = () => {
                     {filteredProperties.length} {filteredProperties.length === 1 ? 'property' : 'properties'} found
                   </p>
                   <div className="flex items-center gap-2 w-full sm:w-auto">
-                    {/* Mobile filters button */}
                     <Sheet open={showMobileFilters} onOpenChange={setShowMobileFilters}>
                       <SheetTrigger asChild className="lg:hidden">
                         <Button variant="outline" className="flex items-center gap-2">
@@ -138,7 +136,6 @@ const Properties = () => {
                       </SheetContent>
                     </Sheet>
 
-                    {/* Sort dropdown */}
                     <Select value={sortBy} onValueChange={setSortBy}>
                       <SelectTrigger className="w-full sm:w-[180px]">
                         <SelectValue placeholder="Sort by" />

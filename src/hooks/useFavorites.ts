@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from './useAuth';
 import { toast } from './use-toast';
 import { supabase } from '@/lib/supabase';
@@ -7,6 +7,43 @@ import { supabase } from '@/lib/supabase';
 export const useFavorites = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [favorites, setFavorites] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch user's favorites
+  const fetchFavorites = useCallback(async () => {
+    if (!user) {
+      setFavorites([]);
+      setLoading(false);
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('favorites')
+        .select('*, properties(*)')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      setFavorites(data || []);
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load favorites",
+        variant: "destructive",
+      });
+      setFavorites([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+
+  // Load favorites when user changes
+  useEffect(() => {
+    fetchFavorites();
+  }, [fetchFavorites, user]);
 
   const checkFavorite = useCallback(async (propertyId: string) => {
     if (!user) return false;
@@ -69,6 +106,9 @@ export const useFavorites = () => {
         });
       }
       
+      // Refresh favorites
+      fetchFavorites();
+      
       setIsLoading(false);
       return { success: true };
     } catch (error) {
@@ -81,7 +121,7 @@ export const useFavorites = () => {
       setIsLoading(false);
       return { success: false };
     }
-  }, [user, checkFavorite]);
+  }, [user, checkFavorite, fetchFavorites]);
 
-  return { checkFavorite, toggleFavorite, isLoading };
+  return { checkFavorite, toggleFavorite, isLoading, favorites, loading };
 };

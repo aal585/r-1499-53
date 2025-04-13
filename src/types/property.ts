@@ -1,4 +1,6 @@
 
+export type PropertyType = 'sale' | 'rent' | 'all';
+
 export interface Property {
   id: string;
   image: string;

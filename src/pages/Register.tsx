@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,7 +29,7 @@ const Register = () => {
 
     try {
       setIsLoading(true);
-      await signUp(email, password, { name });
+      await signUp(email, password, name);
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);

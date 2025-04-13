@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Property, PropertyType } from "@/types/property";
 import { allProperties } from "@/data/properties";

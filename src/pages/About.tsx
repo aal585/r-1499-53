@@ -12,7 +12,12 @@ import {
   BarChart, 
   Award, 
   Users, 
-  Clock 
+  Clock,
+  Wrench,
+  Sofa,
+  PaintBucket,
+  ShieldCheck,
+  ArrowRight
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
