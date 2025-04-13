@@ -1,13 +1,14 @@
 
 import type { Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
 
-export default {
+const config = {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
   ],
   prefix: "",
   theme: {
@@ -20,6 +21,24 @@ export default {
     },
     extend: {
       colors: {
+        estate: {
+          50: "#f0f7ff",
+          100: "#e0f0fe",
+          200: "#bae0fd",
+          300: "#7ccafb",
+          400: "#36aff7",
+          500: "#0c92e5",
+          600: "#0174c4",
+          700: "#025d9e",
+          800: "#064f82",
+          900: "#0a426c",
+          950: "#072b49",
+        },
+        accent: {
+          amber: "#f59e0b",
+          emerald: "#10b981",
+          rose: "#f43f5e",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -53,27 +72,15 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        estate: {
-          50: "#F8F7F6",
-          100: "#F2F0EE",
-          200: "#E5E1DD",
-          300: "#D4CFC9",
-          400: "#A3A3A3",
-          500: "#737373",
-          600: "#525252",
-          700: "#404040",
-          800: "#262626",
-          900: "#171717",
-        }
-      },
-      fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        display: ["Playfair Display", "serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+        display: ["var(--font-display)", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {
@@ -88,33 +95,20 @@ export default {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        zoomOut: {
-          "0%": { transform: "scale(1.02)" },
-          "100%": { transform: "scale(1)" },
-        },
-        slideInRight: {
-          "0%": { opacity: "0", transform: "translateX(30px)" },
-          "100%": { opacity: "1", transform: "translateX(0)" },
-        },
-        slideInLeft: {
-          "0%": { opacity: "0", transform: "translateX(-30px)" },
-          "100%": { opacity: "1", transform: "translateX(0)" },
-        },
-        scaleIn: {
-          "0%": { opacity: "0", transform: "scale(0.9)" },
-          "100%": { opacity: "1", transform: "scale(1)" },
+        slideUp: {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        fadeIn: "fadeIn 0.5s ease-out forwards",
-        zoomOut: "zoomOut 8s ease-out forwards",
-        slideInRight: "slideInRight 0.5s ease-out forwards",
-        slideInLeft: "slideInLeft 0.5s ease-out forwards",
-        scaleIn: "scaleIn 0.5s ease-out forwards",
+        "fade-in": "fadeIn 0.5s ease-out forwards",
+        "slide-up": "slideUp 0.5s ease-out forwards",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
+export default config;

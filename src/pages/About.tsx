@@ -1,185 +1,356 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AboutUs from "@/components/AboutUs";
+import OurVision from "@/components/OurVision";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { 
+  Heart, 
+  HandshakeIcon, 
+  Calendar, 
+  HomeIcon, 
+  BarChart, 
+  Award, 
+  Users, 
+  Clock 
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+const teamMembers = [
+  {
+    name: "Jennifer Anderson",
+    role: "CEO & Founder",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&q=75&fit=crop&w=600",
+    bio: "With over 20 years of experience in luxury real estate, Jennifer founded Elite Real Estate to elevate the standard of property services."
+  },
+  {
+    name: "Michael Johnson",
+    role: "Head of Properties",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&q=75&fit=crop&w=600",
+    bio: "Michael leads our property division with expertise in market analysis and property valuation, ensuring our clients find the perfect homes."
+  },
+  {
+    name: "Sarah Williams",
+    role: "Director of Services",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&q=75&fit=crop&w=600",
+    bio: "Sarah oversees our comprehensive service offerings, from home maintenance to interior design, with a focus on quality and client satisfaction."
+  },
+  {
+    name: "David Chen",
+    role: "Lead Interior Designer",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&q=75&fit=crop&w=600",
+    bio: "Award-winning designer David brings creative vision and practical solutions to help clients transform their spaces into beautiful homes."
+  }
+];
+
+const timeline = [
+  {
+    year: "2010",
+    title: "Elite Real Estate Founded",
+    description: "Started as a boutique real estate agency with a focus on luxury properties."
+  },
+  {
+    year: "2013",
+    title: "Home Services Division",
+    description: "Expanded to offer property maintenance and renovation services to our clients."
+  },
+  {
+    year: "2016",
+    title: "Interior Design & Furniture",
+    description: "Launched our interior design services and exclusive furniture collections."
+  },
+  {
+    year: "2019",
+    title: "Digital Transformation",
+    description: "Implemented cutting-edge technology to enhance client experience and property services."
+  },
+  {
+    year: "2022",
+    title: "Sustainable Initiatives",
+    description: "Committed to eco-friendly practices across all our business operations."
+  },
+  {
+    year: "2025",
+    title: "Looking Forward",
+    description: "Continuing to innovate and expand our services to meet evolving client needs."
+  }
+];
 
 const About = () => {
+  const navigate = useNavigate();
+  
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      <div className="container mx-auto px-4 pt-32 pb-16">
-        <div className="max-w-6xl mx-auto">
-          {/* Hero Section */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-display text-estate-800 mb-4">About Elite Real Estate</h1>
-            <p className="text-estate-500 text-lg max-w-3xl mx-auto">
-              We are a premium real estate agency specializing in luxury properties and exceptional service for discerning clients.
+      {/* Hero */}
+      <div className="bg-estate-800 text-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-display mb-4">About Elite Real Estate</h1>
+            <p className="text-estate-200 text-lg mb-8">
+              Your comprehensive solution for all your real estate and home service needs.
             </p>
-          </div>
-          
-          {/* Our Story */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
-            <div>
-              <h2 className="text-3xl font-display text-estate-800 mb-6">Our Story</h2>
-              <p className="text-estate-600 mb-4">
-                Founded in 2005, Elite Real Estate was born from a vision to transform the luxury real estate experience. What began as a boutique agency has evolved into a leading name in premium property solutions across the country.
-              </p>
-              <p className="text-estate-600 mb-4">
-                Our journey has been defined by an unwavering commitment to excellence, attention to detail, and a deep understanding of our clients' unique needs and aspirations.
-              </p>
-              <p className="text-estate-600">
-                Today, we represent some of the most exclusive properties in the market, backed by a team of dedicated professionals who bring decades of industry expertise to every client interaction.
-              </p>
-            </div>
-            <div className="order-first lg:order-last">
-              <div className="relative">
-                <img
-                  src="https://images.unsplash.com/photo-1613553507747-5f8d62ad5904"
-                  alt="Our office"
-                  className="rounded-lg shadow-xl w-full"
-                />
-                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg hidden md:block">
-                  <p className="text-estate-800 font-semibold">Established 2005</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Our Values */}
-          <div className="mb-20">
-            <h2 className="text-3xl font-display text-estate-800 mb-8 text-center">Our Core Values</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-estate-50 p-6 rounded-lg">
-                <div className="w-12 h-12 bg-estate-100 rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-estate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-medium text-estate-800 mb-2">Integrity</h3>
-                <p className="text-estate-600">
-                  We conduct business with unwavering integrity, ensuring transparency and honesty in every transaction and client relationship.
-                </p>
-              </div>
-              
-              <div className="bg-estate-50 p-6 rounded-lg">
-                <div className="w-12 h-12 bg-estate-100 rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-estate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-medium text-estate-800 mb-2">Excellence</h3>
-                <p className="text-estate-600">
-                  We strive for excellence in every aspect of our service, from property selection to client communication and transaction management.
-                </p>
-              </div>
-              
-              <div className="bg-estate-50 p-6 rounded-lg">
-                <div className="w-12 h-12 bg-estate-100 rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-estate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-medium text-estate-800 mb-2">Client First</h3>
-                <p className="text-estate-600">
-                  We place our clients at the center of everything we do, tailoring our approach to meet their unique needs and exceed their expectations.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          {/* Our Team */}
-          <div className="mb-20">
-            <h2 className="text-3xl font-display text-estate-800 mb-8 text-center">Our Leadership Team</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="text-center">
-                <div className="relative mb-4 inline-block">
-                  <img
-                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a"
-                    alt="CEO"
-                    className="rounded-full w-48 h-48 object-cover mx-auto"
-                  />
-                  <div className="absolute bottom-0 right-0 bg-estate-800 text-white w-10 h-10 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-medium text-estate-800 mb-1">James Wilson</h3>
-                <p className="text-estate-500">Chief Executive Officer</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="relative mb-4 inline-block">
-                  <img
-                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2"
-                    alt="COO"
-                    className="rounded-full w-48 h-48 object-cover mx-auto"
-                  />
-                  <div className="absolute bottom-0 right-0 bg-estate-800 text-white w-10 h-10 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-medium text-estate-800 mb-1">Sarah Johnson</h3>
-                <p className="text-estate-500">Chief Operations Officer</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="relative mb-4 inline-block">
-                  <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
-                    alt="Sales Director"
-                    className="rounded-full w-48 h-48 object-cover mx-auto"
-                  />
-                  <div className="absolute bottom-0 right-0 bg-estate-800 text-white w-10 h-10 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-medium text-estate-800 mb-1">Michael Chen</h3>
-                <p className="text-estate-500">Director of Sales</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="relative mb-4 inline-block">
-                  <img
-                    src="https://images.unsplash.com/photo-1580489944761-15a19d654956"
-                    alt="Marketing Director"
-                    className="rounded-full w-48 h-48 object-cover mx-auto"
-                  />
-                  <div className="absolute bottom-0 right-0 bg-estate-800 text-white w-10 h-10 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-medium text-estate-800 mb-1">Emma Martinez</h3>
-                <p className="text-estate-500">Director of Marketing</p>
-              </div>
-            </div>
-          </div>
-          
-          {/* CTA Section */}
-          <div className="bg-estate-800 text-white p-12 rounded-lg text-center">
-            <h2 className="text-3xl font-display mb-4">Ready to Find Your Dream Home?</h2>
-            <p className="max-w-2xl mx-auto mb-8 text-estate-100">
-              Our team of expert agents is ready to help you find the perfect property that matches your lifestyle and investment goals.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild className="bg-white text-estate-800 hover:bg-estate-100">
-                <Link to="/properties">Browse Properties</Link>
-              </Button>
-              <Button asChild variant="outline" className="bg-transparent border-white text-white hover:bg-estate-700">
-                <Link to="/contact">Contact Us</Link>
-              </Button>
-            </div>
           </div>
         </div>
       </div>
+      
+      <AboutUs />
+      
+      {/* Our Values */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-display text-estate-800 mb-4">Our Core Values</h2>
+            <p className="text-estate-600 max-w-3xl mx-auto">
+              These principles guide everything we do as we strive to provide exceptional service and value to our clients.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {[
+              {
+                icon: Heart,
+                title: "Client-Centered Approach",
+                description: "We place our clients' needs at the heart of everything we do, ensuring personalized service and attention to detail."
+              },
+              {
+                icon: HandshakeIcon,
+                title: "Integrity & Transparency",
+                description: "We operate with honesty and transparency, building trust through ethical business practices and clear communication."
+              },
+              {
+                icon: Award,
+                title: "Excellence & Quality",
+                description: "We pursue excellence in all our services, maintaining the highest standards of quality in properties and home services."
+              }
+            ].map((value, index) => (
+              <div key={index} className="flex flex-col items-center text-center opacity-0 animate-fadeIn" style={{ animationDelay: `${index * 200}ms` }}>
+                <div className="w-16 h-16 rounded-full bg-estate-50 flex items-center justify-center mb-4">
+                  <value.icon className="w-8 h-8 text-estate-700" />
+                </div>
+                <h3 className="text-xl font-semibold text-estate-800 mb-3">{value.title}</h3>
+                <p className="text-estate-600">{value.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Our Services Overview */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-display text-estate-800 mb-4">Comprehensive Services</h2>
+            <p className="text-estate-600 max-w-3xl mx-auto">
+              From finding your dream home to maintaining it, we offer end-to-end solutions for all your property needs.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: HomeIcon,
+                title: "Real Estate Services",
+                description: "Expert guidance in buying, selling, and renting properties with personalized support throughout the process.",
+                link: "/properties"
+              },
+              {
+                icon: Wrench,
+                title: "Home Maintenance",
+                description: "Professional maintenance services including plumbing, electrical work, repairs, and regular upkeep.",
+                link: "/services/maintenance"
+              },
+              {
+                icon: Sofa,
+                title: "Furniture & Decor",
+                description: "Quality furniture pieces and decor items to transform your house into a stylish and comfortable home.",
+                link: "/furniture"
+              },
+              {
+                icon: PaintBucket,
+                title: "Interior Design",
+                description: "Creative design solutions tailored to your preferences, lifestyle, and budget for a space you'll love.",
+                link: "/services/interior-design"
+              },
+              {
+                icon: ShieldCheck,
+                title: "Property Management",
+                description: "Comprehensive property management services for homeowners and investors with rental properties.",
+                link: "/services/property-management"
+              },
+              {
+                icon: Calendar,
+                title: "Consultation Services",
+                description: "Expert advice on real estate investments, home improvements, and property development.",
+                link: "/consultation"
+              }
+            ].map((service, index) => (
+              <div 
+                key={index} 
+                className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer opacity-0 animate-fadeIn"
+                style={{ animationDelay: `${index * 100}ms` }}
+                onClick={() => navigate(service.link)}
+              >
+                <div className="w-12 h-12 rounded-full bg-estate-50 flex items-center justify-center mb-4">
+                  <service.icon className="w-6 h-6 text-estate-700" />
+                </div>
+                <h3 className="text-xl font-semibold text-estate-800 mb-2">{service.title}</h3>
+                <p className="text-estate-600 mb-4">{service.description}</p>
+                <Button 
+                  variant="ghost" 
+                  className="p-0 h-auto text-estate-700 hover:text-estate-900 hover:bg-transparent"
+                >
+                  Learn more <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Team Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-display text-estate-800 mb-4">Meet Our Team</h2>
+            <p className="text-estate-600 max-w-3xl mx-auto">
+              Our experienced professionals are dedicated to providing exceptional service and expertise.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((member, index) => (
+              <div 
+                key={index} 
+                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow opacity-0 animate-fadeIn"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                <div className="aspect-square overflow-hidden">
+                  <img 
+                    src={member.image} 
+                    alt={member.name} 
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+                <div className="p-5">
+                  <h3 className="text-lg font-semibold text-estate-800">{member.name}</h3>
+                  <p className="text-estate-500 text-sm mb-3">{member.role}</p>
+                  <p className="text-estate-600 text-sm">{member.bio}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Company Timeline */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-display text-estate-800 mb-4">Our Journey</h2>
+            <p className="text-estate-600 max-w-3xl mx-auto">
+              The evolution of Elite Real Estate from a boutique agency to a comprehensive home services provider.
+            </p>
+          </div>
+          
+          <div className="relative">
+            {/* Timeline center line */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-estate-200"></div>
+            
+            <div className="space-y-12">
+              {timeline.map((item, index) => (
+                <div 
+                  key={index} 
+                  className={`relative flex items-center opacity-0 animate-fadeIn ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
+                  style={{ animationDelay: `${index * 200}ms` }}
+                >
+                  {/* Timeline dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-estate-500 z-10"></div>
+                  
+                  {/* Content box */}
+                  <div className={`w-5/12 bg-white p-5 rounded-xl shadow-sm border border-gray-100 ${index % 2 === 0 ? 'mr-auto' : 'ml-auto'}`}>
+                    <div className="font-display text-2xl text-estate-800 mb-1">{item.year}</div>
+                    <h3 className="text-lg font-semibold text-estate-800 mb-2">{item.title}</h3>
+                    <p className="text-estate-600">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Stats Section */}
+      <section className="py-20 bg-estate-800 text-white">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                icon: HomeIcon,
+                value: "5,000+",
+                label: "Properties Sold"
+              },
+              {
+                icon: Users,
+                value: "10,000+",
+                label: "Satisfied Clients"
+              },
+              {
+                icon: BarChart,
+                value: "15+",
+                label: "Years Experience"
+              },
+              {
+                icon: Clock,
+                value: "24/7",
+                label: "Client Support"
+              }
+            ].map((stat, index) => (
+              <div 
+                key={index} 
+                className="text-center opacity-0 animate-fadeIn"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/10 mb-4">
+                  <stat.icon className="w-8 h-8" />
+                </div>
+                <div className="text-3xl md:text-4xl font-display mb-2">{stat.value}</div>
+                <p className="text-estate-200">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      <OurVision />
+      
+      {/* CTA Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <h2 className="text-3xl md:text-4xl font-display text-estate-800 mb-4">Ready to Work With Us?</h2>
+          <p className="text-estate-600 mb-8">
+            Whether you're looking for your dream home, quality furniture, or professional services, we're here to help.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              className="bg-estate-800 hover:bg-estate-700 text-white"
+              size="lg"
+              onClick={() => navigate("/contact")}
+            >
+              Contact Us
+            </Button>
+            <Button 
+              variant="outline" 
+              className="border-estate-300 text-estate-800 hover:bg-estate-50"
+              size="lg"
+              onClick={() => navigate("/services")}
+            >
+              Explore Services
+            </Button>
+          </div>
+        </div>
+      </section>
       
       <Footer />
     </div>

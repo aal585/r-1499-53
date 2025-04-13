@@ -5,10 +5,15 @@ export interface Property {
   title: string;
   location: string;
   price: string;
-  bedrooms: number;
-  bathrooms: number;
-  area: number;
-  type: 'sale' | 'rent';
+  bedrooms?: number;
+  bathrooms?: number;
+  area?: number;
+  type?: 'sale' | 'rent';
+  description?: string;
+  features?: string[];
+  images?: string[];
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
 }
-
-export type PropertyType = 'sale' | 'rent' | 'all';

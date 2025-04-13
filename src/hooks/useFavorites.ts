@@ -1,70 +1,87 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import * as favoriteService from '@/services/favoriteService';
+import { useState, useCallback } from 'react';
+import { useAuth } from './useAuth';
+import { toast } from './use-toast';
+import { supabase } from '@/lib/supabase';
 
 export const useFavorites = () => {
   const { user } = useAuth();
-  const [favorites, setFavorites] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  
-  const fetchFavorites = useCallback(async () => {
-    if (!user) {
-      setFavorites([]);
-      setLoading(false);
-      return;
-    }
-    
-    setLoading(true);
-    const { data } = await favoriteService.getUserFavorites(user.id);
-    setFavorites(data);
-    setLoading(false);
-  }, [user]);
-  
-  // Load favorites when the user changes
-  useEffect(() => {
-    fetchFavorites();
-  }, [fetchFavorites]);
-  
-  const toggleFavorite = async (propertyId: string) => {
-    if (!user) {
-      // User is not logged in
-      return { success: false, message: 'Please log in to save favorites' };
-    }
-    
-    const { isFavorite } = await favoriteService.isPropertyFavorite(user.id, propertyId);
-    
-    if (isFavorite) {
-      // Remove from favorites
-      const result = await favoriteService.removeFavorite(user.id, propertyId);
-      if (result.success) {
-        // Update local state
-        setFavorites(favorites.filter(fav => fav.property_id !== propertyId));
-      }
-      return result;
-    } else {
-      // Add to favorites
-      const result = await favoriteService.addFavorite(user.id, propertyId);
-      if (result.success && !result.alreadyExists) {
-        // Refresh favorites list to get the full data
-        fetchFavorites();
-      }
-      return result;
-    }
-  };
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const checkFavorite = useCallback(async (propertyId: string) => {
     if (!user) return false;
     
-    const { isFavorite } = await favoriteService.isPropertyFavorite(user.id, propertyId);
-    return isFavorite;
+    try {
+      const { data } = await supabase
+        .from('favorites')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('property_id', propertyId)
+        .single();
+      
+      return !!data;
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+      return false;
+    }
   }, [user]);
-  
-  return {
-    favorites,
-    loading,
-    toggleFavorite,
-    checkFavorite,
-    refreshFavorites: fetchFavorites
-  };
+
+  const toggleFavorite = useCallback(async (propertyId: string) => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to save favorites",
+        variant: "destructive",
+      });
+      return { success: false };
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const isFavorite = await checkFavorite(propertyId);
+      
+      if (isFavorite) {
+        // Remove from favorites
+        await supabase
+          .from('favorites')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('property_id', propertyId);
+        
+        toast({
+          title: "Removed from Favorites",
+          description: "Property has been removed from your favorites",
+        });
+      } else {
+        // Add to favorites
+        await supabase
+          .from('favorites')
+          .insert({
+            user_id: user.id,
+            property_id: propertyId,
+            created_at: new Date().toISOString(),
+          });
+        
+        toast({
+          title: "Added to Favorites",
+          description: "Property has been added to your favorites",
+        });
+      }
+      
+      setIsLoading(false);
+      return { success: true };
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update favorites. Please try again.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return { success: false };
+    }
+  }, [user, checkFavorite]);
+
+  return { checkFavorite, toggleFavorite, isLoading };
 };
