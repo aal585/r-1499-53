@@ -1,13 +1,16 @@
 
-import { MapPin } from "lucide-react";
+import { MapPin, ArrowRight, Home, Building } from "lucide-react";
 import SearchBar from "./SearchBar";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [activeTab, setActiveTab] = useState<'buy' | 'rent'>('buy');
+  const navigate = useNavigate();
   
   useEffect(() => {
     // Trigger animation after component mounts
@@ -28,6 +31,10 @@ const Hero = () => {
 
   // Calculate parallax effect based on scroll position
   const parallaxValue = scrollPosition * 0.15;
+
+  const handleGetStarted = () => {
+    navigate(`/properties?type=${activeTab === 'buy' ? 'sale' : 'rent'}`);
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -66,13 +73,58 @@ const Hero = () => {
           </p>
           
           <div className={cn(
-            "max-w-2xl mx-auto backdrop-blur-md bg-white/10 p-2 rounded-2xl border border-white/20 shadow-lg transform transition-all duration-700",
-            "hover:border-white/30 hover:bg-white/15",
+            "max-w-2xl mx-auto transition-all duration-700",
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           )}
             style={{ transitionDelay: "200ms" }}
           >
-            <SearchBar />
+            {/* Property type tabs */}
+            <div className="flex justify-center mb-4">
+              <div className="bg-white/10 backdrop-blur-md p-1 rounded-full border border-white/20 shadow-lg inline-flex">
+                <button 
+                  className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
+                    activeTab === 'buy' 
+                      ? 'bg-amber-500 text-white shadow-md' 
+                      : 'text-white/90 hover:bg-white/10'
+                  }`}
+                  onClick={() => setActiveTab('buy')}
+                >
+                  <span className="flex items-center gap-1">
+                    <Home className="w-4 h-4" />
+                    Buy
+                  </span>
+                </button>
+                <button 
+                  className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
+                    activeTab === 'rent' 
+                      ? 'bg-amber-500 text-white shadow-md' 
+                      : 'text-white/90 hover:bg-white/10'
+                  }`}
+                  onClick={() => setActiveTab('rent')}
+                >
+                  <span className="flex items-center gap-1">
+                    <Building className="w-4 h-4" />
+                    Rent
+                  </span>
+                </button>
+              </div>
+            </div>
+            
+            {/* Search bar */}
+            <div className="backdrop-blur-md bg-white/10 p-2 rounded-2xl border border-white/20 shadow-lg transform transition-all duration-700 hover:border-white/30 hover:bg-white/15">
+              <SearchBar />
+            </div>
+            
+            {/* Call to action button */}
+            <Button 
+              className="mt-8 bg-amber-500 hover:bg-amber-600 text-white px-8 py-6 rounded-full shadow-lg transition-all duration-300 hover:-translate-y-1"
+              onClick={handleGetStarted}
+            >
+              <span className="flex items-center gap-2 text-lg">
+                Explore {activeTab === 'buy' ? 'Properties' : 'Rentals'}
+                <ArrowRight className="w-5 h-5" />
+              </span>
+            </Button>
           </div>
         </div>
 

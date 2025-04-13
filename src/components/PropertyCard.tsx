@@ -4,7 +4,7 @@ import { Card, CardContent } from "./ui/card";
 import { Link } from "react-router-dom";
 import FavoriteButton from "./FavoriteButton";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface PropertyCardProps {
   image: string;
@@ -16,6 +16,7 @@ interface PropertyCardProps {
   bathrooms?: number;
   area?: number;
   type?: 'sale' | 'rent';
+  delay?: number;
 }
 
 const PropertyCard = ({ 
@@ -27,15 +28,30 @@ const PropertyCard = ({
   bedrooms,
   bathrooms,
   area,
-  type = 'sale'
+  type = 'sale',
+  delay = 0
 }: PropertyCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const displayPrice = type === 'rent' ? `${price}/month` : price;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100 + delay);
+
+    return () => clearTimeout(timer);
+  }, [delay]);
 
   return (
     <Link to={`/property/${id}`}>
       <Card 
-        className="overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-500 border border-estate-200 hover:border-amber-300/50 bg-white h-full transform hover:-translate-y-2"
+        className={cn(
+          "overflow-hidden group cursor-pointer transition-all duration-700 border border-estate-200 hover:border-amber-300/50 bg-white h-full transform",
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+          isHovered ? "shadow-xl -translate-y-2" : "shadow-sm"
+        )}
+        style={{ transitionDelay: `${delay}ms` }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -59,9 +75,9 @@ const PropertyCard = ({
               {displayPrice}
             </div>
             <div className={cn(
-              "absolute top-3 left-3 backdrop-blur-sm text-white px-3 py-1.5 text-sm font-medium rounded-md flex items-center gap-1 shadow-md transition-transform duration-300",
+              "absolute top-3 left-3 backdrop-blur-sm text-white px-3 py-1.5 text-sm font-medium rounded-md flex items-center gap-1 shadow-md transition-all duration-300",
               type === 'sale' ? 'bg-blue-500/90' : 'bg-green-500/90',
-              isHovered ? "translate-y-0" : "translate-y-0"
+              isHovered ? "translate-y-0 opacity-100" : "translate-y-0 opacity-100"
             )}>
               {type === 'sale' ? <Tag className="w-4 h-4" /> : <Home className="w-4 h-4" />}
               {type === 'sale' ? 'For Sale' : 'For Rent'}
