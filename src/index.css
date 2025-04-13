@@ -95,6 +95,34 @@
   .service-icon {
     @apply mb-4 rounded-full bg-estate-50 p-3 text-estate-600 transition-all duration-300;
   }
+
+  .glass-effect {
+    @apply bg-white/70 backdrop-blur-md;
+  }
+
+  .soft-shadow {
+    @apply shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)];
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+  
+  .gradient-border {
+    @apply border border-transparent bg-gradient-to-r from-accent-amber to-accent-rose bg-origin-border;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-vibrant-purple to-vibrant-blue bg-clip-text text-transparent;
+  }
+  
+  .pastel-card {
+    @apply rounded-lg bg-pastel-blue p-6;
+  }
+  
+  .vibrant-card {
+    @apply rounded-lg bg-vibrant-purple text-white p-6;
+  }
 }
 
 @keyframes fadeIn {
