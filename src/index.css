@@ -59,6 +59,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    scroll-behavior: smooth;
   }
 }
 
@@ -69,6 +70,22 @@
   
   .service-card {
     @apply relative p-6 transition-all duration-300 rounded-lg border border-gray-100 hover:shadow-lg overflow-hidden bg-white;
+  }
+  
+  .glass-effect {
+    @apply backdrop-blur-lg bg-white/10 border border-white/20 shadow-md;
+  }
+  
+  .soft-shadow {
+    @apply shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)];
+  }
+  
+  .luxury-card {
+    @apply bg-white border border-gray-100 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl group;
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
   }
 }
 
@@ -97,4 +114,61 @@
   .animate-delay-800 {
     animation-delay: 800ms;
   }
+  
+  /* Hover effects */
+  .hover-scale {
+    @apply transition-transform duration-300 ease-out;
+  }
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300;
+  }
+  .hover-glow:hover {
+    box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Focus effects */
+  .focus-expand {
+    @apply transition-all duration-300;
+  }
+  .focus-expand:focus-within {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0); 
+  }
+  50% { 
+    transform: translateY(-10px); 
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -468px 0;
+  }
+  to {
+    background-position: 468px 0;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0) 40%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Improved text selection color */
+::selection {
+  background-color: rgba(245, 158, 11, 0.3);
+  color: inherit;
 }
