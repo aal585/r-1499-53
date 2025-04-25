@@ -13,13 +13,12 @@ export interface Favorite {
 // Get all favorites for the current user
 export const getUserFavorites = async (userId: string) => {
   try {
-    const { data, error } = await supabase
+    const queryResult = await supabase
       .from('favorites')
       .select('*, properties(*)') 
       .eq('user_id', userId);
     
-    if (error) throw error;
-    return { data: data || [], error: null };
+    return { data: queryResult.data || [], error: queryResult.error };
   } catch (err: any) {
     console.error('Error fetching favorites:', err);
     return { data: [], error: err.message };
@@ -30,34 +29,38 @@ export const getUserFavorites = async (userId: string) => {
 export const addFavorite = async (userId: string, propertyId: string) => {
   try {
     // Check if already favorited to prevent duplicates
-    const { data: checkData, error: checkError } = await supabase
+    const checkQuery = supabase
       .from('favorites')
-      .select('id')
+      .select('id');
+    
+    const checkResult = await checkQuery
       .eq('user_id', userId)
       .eq('property_id', propertyId);
     
-    if (checkError) throw checkError;
+    if (checkResult.error) throw checkResult.error;
     
-    const existingFavorite = checkData && checkData[0];
+    const existingFavorite = checkResult.data && checkResult.data[0];
     
     if (existingFavorite) {
       return { success: true, data: existingFavorite, error: null, alreadyExists: true };
     }
     
-    const { data, error } = await supabase
+    const insertQuery = supabase
       .from('favorites')
       .insert({ user_id: userId, property_id: propertyId })
       .select()
       .single();
     
-    if (error) throw error;
+    const insertResult = await insertQuery;
+    
+    if (insertResult.error) throw insertResult.error;
     
     toast({
       title: 'Property Saved',
       description: 'This property has been added to your favorites',
     });
     
-    return { success: true, data, error: null, alreadyExists: false };
+    return { success: true, data: insertResult.data, error: null, alreadyExists: false };
   } catch (err: any) {
     console.error('Error adding favorite:', err);
     toast({
@@ -72,13 +75,15 @@ export const addFavorite = async (userId: string, propertyId: string) => {
 // Remove a property from favorites
 export const removeFavorite = async (userId: string, propertyId: string) => {
   try {
-    const { error } = await supabase
+    const deleteQuery = supabase
       .from('favorites')
-      .delete()
+      .delete();
+    
+    const deleteResult = await deleteQuery
       .eq('user_id', userId)
       .eq('property_id', propertyId);
     
-    if (error) throw error;
+    if (deleteResult.error) throw deleteResult.error;
     
     toast({
       title: 'Property Removed',
@@ -100,15 +105,17 @@ export const removeFavorite = async (userId: string, propertyId: string) => {
 // Check if a property is favorited by the current user
 export const isPropertyFavorite = async (userId: string, propertyId: string) => {
   try {
-    const { data, error } = await supabase
+    const checkQuery = supabase
       .from('favorites')
-      .select('id')
+      .select('id');
+    
+    const result = await checkQuery
       .eq('user_id', userId)
       .eq('property_id', propertyId);
     
-    if (error && error.code !== 'PGRST116') throw error; // PGRST116 is the "no rows returned" error
+    if (result.error && result.error.code !== 'PGRST116') throw result.error; // PGRST116 is the "no rows returned" error
     
-    return { isFavorite: !!data && data.length > 0, error: null };
+    return { isFavorite: !!result.data && result.data.length > 0, error: null };
   } catch (err: any) {
     console.error('Error checking favorite status:', err);
     return { isFavorite: false, error: err.message };

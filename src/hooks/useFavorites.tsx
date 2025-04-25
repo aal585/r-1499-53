@@ -88,9 +88,11 @@ export const useFavorites = () => {
         setFavorites(favorites.filter((id) => id !== propertyId));
         // Try to delete from supabase if available
         try {
-          await supabase
+          const deleteQuery = supabase
             .from('favorites')
-            .delete()
+            .delete();
+            
+          await deleteQuery
             .eq('user_id', user.id)
             .eq('property_id', propertyId);
           

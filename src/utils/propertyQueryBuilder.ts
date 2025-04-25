@@ -2,7 +2,7 @@
 import { supabase } from "@/lib/supabase";
 import { PropertyType } from "@/types/property";
 
-export const buildPropertyQuery = (
+export const buildPropertyQuery = async (
   searchQuery: string,
   propertyType: PropertyType,
   priceRange: [number, number],
@@ -12,11 +12,10 @@ export const buildPropertyQuery = (
   maxArea: number | null,
   sortBy: string
 ) => {
+  // Start with the base query
   let query = supabase.from('properties').select('*');
-
-  // Instead of chaining methods that modify the query in place, we'll execute each step
-  // and return the final query at the end
   
+  // Apply filters one by one
   if (searchQuery) {
     query = query.or(`location.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
   }
@@ -54,7 +53,7 @@ export const buildPropertyQuery = (
     query = query.lte('area', maxArea);
   }
 
-  // Add sorting
+  // Apply sorting at the end
   switch (sortBy) {
     case "price-low":
       query = query.order('price', { ascending: true });
@@ -72,6 +71,6 @@ export const buildPropertyQuery = (
       query = query.order('created_at', { ascending: false });
   }
 
-  // Return the final query
-  return query;
+  // Execute and return the query
+  return await query;
 };
