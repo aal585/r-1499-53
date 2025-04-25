@@ -72,5 +72,6 @@ export const buildPropertyQuery = async (
   }
 
   // Execute and return the query
-  return await query;
+  const result = await query;
+  return result;
 };

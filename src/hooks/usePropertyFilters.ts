@@ -22,7 +22,7 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
 
     const fetchFromSupabase = async () => {
       try {
-        const { data, error } = await buildPropertyQuery(
+        const result = await buildPropertyQuery(
           searchQuery,
           propertyType,
           priceRange,
@@ -33,8 +33,8 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
           sortBy
         );
         
-        if (!error && data) {
-          setFilteredProperties(data);
+        if (result && !result.error && result.data) {
+          setFilteredProperties(result.data);
           setLoading(false);
           return;
         }

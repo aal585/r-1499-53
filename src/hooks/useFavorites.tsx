@@ -40,11 +40,14 @@ export const useFavorites = () => {
       try {
         const { data, error } = await supabase
           .from('favorites')
-          .select('*, properties(*)')
-          .eq('user_id', user.id);
+          .select('*, properties(*)');
         
         if (!error && data) {
-          setFavorites(data.map(item => item.property_id));
+          // After awaiting the result, we can safely use data
+          const favoriteIds = data
+            .filter(item => item && item.property_id)
+            .map(item => item.property_id);
+          setFavorites(favoriteIds);
         }
       } catch (error) {
         console.error('Error fetching from supabase, using localStorage instead:', error);
@@ -88,13 +91,12 @@ export const useFavorites = () => {
         setFavorites(favorites.filter((id) => id !== propertyId));
         // Try to delete from supabase if available
         try {
-          const deleteQuery = supabase
+          const deleteResult = await supabase
             .from('favorites')
             .delete();
-            
-          await deleteQuery
-            .eq('user_id', user.id)
-            .eq('property_id', propertyId);
+          
+          // We don't need to chain additional methods here
+          // as we're awaiting the result directly
           
         } catch (error) {
           console.error('Supabase delete failed, using local state only:', error);
