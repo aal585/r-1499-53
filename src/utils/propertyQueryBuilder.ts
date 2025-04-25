@@ -14,6 +14,9 @@ export const buildPropertyQuery = (
 ) => {
   let query = supabase.from('properties').select('*');
 
+  // Instead of chaining methods that modify the query in place, we'll execute each step
+  // and return the final query at the end
+  
   if (searchQuery) {
     query = query.or(`location.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
   }
@@ -23,7 +26,8 @@ export const buildPropertyQuery = (
   }
 
   if (priceRange) {
-    query = query.gte('price', priceRange[0]).lte('price', priceRange[1]);
+    query = query.gte('price', priceRange[0]);
+    query = query.lte('price', priceRange[1]);
   }
 
   if (bedrooms && bedrooms !== "any") {
@@ -50,6 +54,7 @@ export const buildPropertyQuery = (
     query = query.lte('area', maxArea);
   }
 
+  // Add sorting
   switch (sortBy) {
     case "price-low":
       query = query.order('price', { ascending: true });
@@ -67,5 +72,6 @@ export const buildPropertyQuery = (
       query = query.order('created_at', { ascending: false });
   }
 
+  // Return the final query
   return query;
 };

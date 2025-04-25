@@ -33,6 +33,7 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
           sortBy
         );
 
+        // Execute the query and get the data
         const { data, error } = await query;
         
         if (!error && data) {
