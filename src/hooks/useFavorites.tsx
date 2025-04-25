@@ -13,13 +13,7 @@ export const useFavorites = () => {
   // Load favorites from local storage when user changes
   useEffect(() => {
     if (user) {
-      const storedFavorites = localStorage.getItem(`favorites_${user.id}`);
-      if (storedFavorites) {
-        setFavorites(JSON.parse(storedFavorites));
-      } else {
-        setFavorites([]);
-      }
-      setLoading(false);
+      fetchFavorites();
     } else {
       setFavorites([]);
       setLoading(false);
@@ -36,6 +30,7 @@ export const useFavorites = () => {
   const fetchFavorites = async () => {
     if (!user) {
       setFavorites([]);
+      setLoading(false);
       return;
     }
     
@@ -43,10 +38,14 @@ export const useFavorites = () => {
     try {
       // First try to use supabase
       try {
-        const { data, error } = await supabase
+        const result = await supabase
           .from('favorites')
           .select('*, properties(*)')
           .eq('user_id', user.id);
+        
+        // This is now a direct promise result
+        const data = result.data;
+        const error = result.error;
         
         if (!error && data) {
           setFavorites(data.map(item => item.property_id));
@@ -93,11 +92,13 @@ export const useFavorites = () => {
         setFavorites(favorites.filter((id) => id !== propertyId));
         // Try to delete from supabase if available
         try {
-          await supabase
+          const result = await supabase
             .from('favorites')
             .delete()
             .eq('user_id', user.id)
             .eq('property_id', propertyId);
+          
+          // No need to check result as it's a mock and the state is already updated
         } catch (error) {
           console.error('Supabase delete failed, using local state only:', error);
         }
@@ -110,13 +111,17 @@ export const useFavorites = () => {
         setFavorites([...favorites, propertyId]);
         // Try to add to supabase if available
         try {
-          await supabase
+          const result = await supabase
             .from('favorites')
             .insert({
               user_id: user.id,
               property_id: propertyId,
               created_at: new Date().toISOString(),
-            });
+            })
+            .select()
+            .single();
+          
+          // No need to check result as it's a mock and the state is already updated
         } catch (error) {
           console.error('Supabase insert failed, using local state only:', error);
         }

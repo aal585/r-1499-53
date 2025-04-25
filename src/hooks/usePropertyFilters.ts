@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { PropertyType } from "@/types/property";
 import { allProperties } from "@/data/properties";
@@ -34,7 +33,8 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
         }
         
         if (priceRange) {
-          query = query.gte('price', priceRange[0]).lte('price', priceRange[1]);
+          query = query.gte('price', priceRange[0]);
+          query = query.lte('price', priceRange[1]);
         }
         
         if (bedrooms && bedrooms !== "any") {
@@ -79,7 +79,8 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
             query = query.order('created_at', { ascending: false });
         }
 
-        const { data, error } = await query;
+        const result = await query;
+        const { data, error } = result;
         
         if (!error && data) {
           setFilteredProperties(data);

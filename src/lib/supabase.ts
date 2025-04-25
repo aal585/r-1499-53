@@ -58,43 +58,175 @@ const properties: Property[] = [
   }
 ];
 
-// Mock supabase client
+// Improved mock supabase client with better chaining support
 export const supabase = {
-  from: (table: string) => ({
-    select: (columns: string = '*') => ({
-      eq: (column: string, value: any) => ({
-        single: () => mockSingleQuery(table, column, value),
-        order: () => mockOrderedQuery(table, column, value),
-        gte: () => mockRangeQuery(table),
-        lte: () => mockRangeQuery(table),
-      }),
-      gte: (column: string, value: any) => ({
-        lte: (column: string, value: any) => mockRangeQuery(table),
-        order: () => mockOrderedQuery(table),
-      }),
-      lte: (column: string, value: any) => ({
-        order: () => mockOrderedQuery(table),
-      }),
-      order: (column: string, { ascending = true } = {}) => mockOrderedQuery(table),
-      or: (query: string) => ({
-        eq: () => mockFilteredQuery(table),
-        gte: () => mockRangeQuery(table),
-        lte: () => mockRangeQuery(table),
-        order: () => mockOrderedQuery(table),
-      }),
-    }),
-    insert: (data: any) => ({
-      select: () => ({ single: () => mockInsert(table, data) }),
-    }),
-    update: (data: any) => ({
-      eq: (column: string, value: any) => ({
-        select: () => ({ single: () => mockUpdate(table, column, value, data) }),
-      }),
-    }),
-    delete: () => ({
-      eq: (column: string, value: any) => mockDelete(table, column, value),
-    }),
-  }),
+  from: (table: string) => {
+    return {
+      select: (columns: string = '*') => {
+        return {
+          eq: (column: string, value: any) => {
+            return {
+              single: () => mockSingleQuery(table, column, value),
+              order: (column?: string, options?: { ascending?: boolean }) => 
+                mockOrderedQuery(table, column, value, options),
+              gte: (column: string, value: any) => ({
+                lte: (column: string, value: any) => mockRangeQuery(table),
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+              }),
+              lte: (column: string, value: any) => ({
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+              }),
+              data: null,
+              error: null
+            };
+          },
+          gte: (column: string, value: any) => {
+            return {
+              lte: (column: string, value: any) => mockRangeQuery(table),
+              order: (column?: string, options?: { ascending?: boolean }) => 
+                mockOrderedQuery(table, column, value, options),
+              eq: (column: string, value: any) => ({
+                single: () => mockSingleQuery(table, column, value),
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+              }),
+              data: null,
+              error: null
+            };
+          },
+          lte: (column: string, value: any) => {
+            return {
+              order: (column?: string, options?: { ascending?: boolean }) => 
+                mockOrderedQuery(table, column, value, options),
+              eq: (column: string, value: any) => ({
+                single: () => mockSingleQuery(table, column, value),
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+              }),
+              data: null,
+              error: null
+            };
+          },
+          order: (column: string, { ascending = true } = {}) => {
+            return {
+              eq: (column: string, value: any) => ({
+                single: () => mockSingleQuery(table, column, value),
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+              }),
+              gte: (column: string, value: any) => ({
+                lte: (column: string, value: any) => mockRangeQuery(table),
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+              }),
+              lte: (column: string, value: any) => ({
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+              }),
+              or: (query: string) => ({
+                eq: (column: string, value: any) => ({
+                  single: () => mockSingleQuery(table, column, value),
+                  order: (column?: string, options?: { ascending?: boolean }) => 
+                    mockOrderedQuery(table, column, value, options),
+                }),
+                gte: (column: string, value: any) => ({
+                  lte: (column: string, value: any) => mockRangeQuery(table),
+                  order: (column?: string, options?: { ascending?: boolean }) => 
+                    mockOrderedQuery(table, column, value, options),
+                }),
+                lte: (column: string, value: any) => ({
+                  order: (column?: string, options?: { ascending?: boolean }) => 
+                    mockOrderedQuery(table, column, value, options),
+                }),
+              }),
+              then: (callback: (result: any) => void) => {
+                const result = { data: [...properties], error: null };
+                callback(result);
+                return Promise.resolve(result);
+              },
+              data: [...properties],
+              error: null
+            };
+          },
+          or: (query: string) => {
+            return {
+              eq: (column: string, value: any) => ({
+                single: () => mockSingleQuery(table, column, value),
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+                gte: (column: string, value: any) => ({
+                  lte: (column: string, value: any) => mockRangeQuery(table),
+                }),
+                lte: (column: string, value: any) => mockRangeQuery(table),
+                data: [...properties],
+                error: null
+              }),
+              gte: (column: string, value: any) => ({
+                lte: (column: string, value: any) => mockRangeQuery(table),
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+              }),
+              lte: (column: string, value: any) => ({
+                order: (column?: string, options?: { ascending?: boolean }) => 
+                  mockOrderedQuery(table, column, value, options),
+              }),
+              order: (column: string, options?: { ascending?: boolean }) => 
+                mockOrderedQuery(table, column, undefined, options),
+              data: [...properties],
+              error: null
+            };
+          },
+          then: (callback: (result: any) => void) => {
+            const result = { data: [...properties], error: null };
+            callback(result);
+            return Promise.resolve(result);
+          },
+          data: [...properties],
+          error: null
+        };
+      },
+      insert: (data: any) => {
+        return {
+          select: () => ({ 
+            single: () => mockInsert(table, data),
+            data: null,
+            error: null 
+          }),
+        };
+      },
+      update: (data: any) => {
+        return {
+          eq: (column: string, value: any) => ({
+            select: () => ({ 
+              single: () => mockUpdate(table, column, value, data),
+              data: null,
+              error: null 
+            }),
+            data: null,
+            error: null
+          }),
+        };
+      },
+      delete: () => {
+        return {
+          eq: (column: string, value: any) => {
+            if (column && value) {
+              return {
+                eq: (column2: string, value2: any) => mockDelete(table, column, value, column2, value2),
+                data: null,
+                error: null
+              };
+            }
+            return mockDelete(table, column, value);
+          },
+          data: null,
+          error: null
+        };
+      },
+    };
+  },
   storage: {
     from: (bucket: string) => ({
       upload: (path: string, file: File) => Promise.resolve({ data: { path }, error: null }),
@@ -116,7 +248,7 @@ const mockSingleQuery = (table: string, column: string, value: any) => {
   return Promise.resolve({ data: null, error: null });
 };
 
-const mockOrderedQuery = (table: string, column?: string, value?: any) => {
+const mockOrderedQuery = (table: string, column?: string, value?: any, options?: { ascending?: boolean }) => {
   if (table === 'properties') {
     return Promise.resolve({ data: [...properties], error: null });
   }
@@ -130,18 +262,21 @@ const mockRangeQuery = (table: string) => {
   return Promise.resolve({ data: [], error: null });
 };
 
-const mockFilteredQuery = (table: string) => {
-  if (table === 'properties') {
-    return Promise.resolve({ data: [...properties], error: null });
-  }
-  return Promise.resolve({ data: [], error: null });
-};
-
 const mockInsert = (table: string, data: any) => {
   if (table === 'properties') {
     const newProperty = { ...data, id: `${properties.length + 1}` };
     properties.push(newProperty as Property);
     return Promise.resolve({ data: newProperty, error: null });
+  }
+  if (table === 'favorites') {
+    return Promise.resolve({ 
+      data: { 
+        ...data, 
+        id: `fav-${Math.random().toString(36).substring(2, 9)}`,
+        properties: properties.find(p => p.id === data.property_id)
+      }, 
+      error: null 
+    });
   }
   return Promise.resolve({ data: { ...data, id: '123' }, error: null });
 };
@@ -157,13 +292,16 @@ const mockUpdate = (table: string, column: string, value: any, data: any) => {
   return Promise.resolve({ data: null, error: { message: 'Not found' } });
 };
 
-const mockDelete = (table: string, column: string, value: any) => {
+const mockDelete = (table: string, column: string, value: any, column2?: string, value2?: any) => {
   if (table === 'properties') {
     const index = properties.findIndex(p => p[column as keyof Property] === value);
     if (index !== -1) {
       properties.splice(index, 1);
       return Promise.resolve({ error: null });
     }
+  }
+  if (table === 'favorites' && column2 && value2) {
+    return Promise.resolve({ error: null });
   }
   return Promise.resolve({ error: null });
 };

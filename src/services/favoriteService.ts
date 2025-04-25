@@ -13,10 +13,12 @@ export interface Favorite {
 // Get all favorites for the current user
 export const getUserFavorites = async (userId: string) => {
   try {
-    const { data, error } = await supabase
+    const result = await supabase
       .from('favorites')
-      .select('*, properties(*)')
+      .select('*, properties(*)') 
       .eq('user_id', userId);
+    
+    const { data, error } = result;
     
     if (error) throw error;
     return { data: data || [], error: null };
@@ -30,22 +32,25 @@ export const getUserFavorites = async (userId: string) => {
 export const addFavorite = async (userId: string, propertyId: string) => {
   try {
     // Check if already favorited to prevent duplicates
-    const { data: existingFavorite } = await supabase
+    const checkResult = await supabase
       .from('favorites')
       .select('id')
       .eq('user_id', userId)
-      .eq('property_id', propertyId)
-      .single();
+      .eq('property_id', propertyId);
+    
+    const existingFavorite = checkResult.data && checkResult.data[0];
     
     if (existingFavorite) {
       return { success: true, data: existingFavorite, error: null, alreadyExists: true };
     }
     
-    const { data, error } = await supabase
+    const insertResult = await supabase
       .from('favorites')
       .insert({ user_id: userId, property_id: propertyId })
       .select()
       .single();
+    
+    const { data, error } = insertResult;
     
     if (error) throw error;
     
@@ -69,11 +74,13 @@ export const addFavorite = async (userId: string, propertyId: string) => {
 // Remove a property from favorites
 export const removeFavorite = async (userId: string, propertyId: string) => {
   try {
-    const { error } = await supabase
+    const result = await supabase
       .from('favorites')
       .delete()
       .eq('user_id', userId)
       .eq('property_id', propertyId);
+    
+    const { error } = result;
     
     if (error) throw error;
     
@@ -97,16 +104,17 @@ export const removeFavorite = async (userId: string, propertyId: string) => {
 // Check if a property is favorited by the current user
 export const isPropertyFavorite = async (userId: string, propertyId: string) => {
   try {
-    const { data, error } = await supabase
+    const result = await supabase
       .from('favorites')
       .select('id')
       .eq('user_id', userId)
-      .eq('property_id', propertyId)
-      .single();
+      .eq('property_id', propertyId);
+    
+    const { data, error } = result;
     
     if (error && error.code !== 'PGRST116') throw error; // PGRST116 is the "no rows returned" error
     
-    return { isFavorite: !!data, error: null };
+    return { isFavorite: !!data && data.length > 0, error: null };
   } catch (err: any) {
     console.error('Error checking favorite status:', err);
     return { isFavorite: false, error: err.message };
