@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { Property, PropertyType } from "@/types/property";
+import { PropertyType } from "@/types/property";
 import { allProperties } from "@/data/properties";
 import { supabase } from "@/lib/supabase";
 
@@ -12,7 +13,7 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
   const [minArea, setMinArea] = useState<number | null>(null);
   const [maxArea, setMaxArea] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<string>("newest");
-  const [filteredProperties, setFilteredProperties] = useState<Property[]>(allProperties);
+  const [filteredProperties, setFilteredProperties] = useState<any[]>(allProperties);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -81,7 +82,7 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
         const { data, error } = await query;
         
         if (!error && data) {
-          setFilteredProperties(data as any);
+          setFilteredProperties(data);
           setLoading(false);
           return;
         }

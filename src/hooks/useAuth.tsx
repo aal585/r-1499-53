@@ -1,8 +1,7 @@
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import { toast } from "./use-toast";
 
-// Define the User type
 interface User {
   id: string;
   email: string;
@@ -13,120 +12,166 @@ interface User {
   phone?: string;
 }
 
-// Define the AuthContext type
 interface AuthContextType {
   user: User | null;
-  loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signUp: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
+  isLoading: boolean;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  signUp: (email: string, password: string, name: string) => Promise<boolean>;
   signOut: () => Promise<void>;
-  updateProfile: (data: Partial<User>) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (email: string) => Promise<boolean>;
 }
 
-// Create the Auth context
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isLoading: false,
+  signIn: async () => false,
+  signUp: async () => false,
+  signOut: async () => {},
+  resetPassword: async () => false,
+});
 
-// Create the Auth provider component
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock authentication functions for demo purposes
   useEffect(() => {
-    // Simulate checking for existing session
-    const checkSession = () => {
-      const storedUser = localStorage.getItem("user");
+    // Check if user is already logged in from localStorage
+    const checkUser = async () => {
+      const storedUser = localStorage.getItem('user');
       if (storedUser) {
         setUser(JSON.parse(storedUser));
       }
-      setLoading(false);
+      setIsLoading(false);
     };
-
-    checkSession();
+    
+    checkUser();
   }, []);
 
   const signIn = async (email: string, password: string) => {
     try {
-      // For demo, we'll create a simulated user
+      setIsLoading(true);
+      // Mock authentication
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       const mockUser: User = {
-        id: "user123",
+        id: 'user123',
         email,
         user_metadata: {
-          name: email.split('@')[0],
-        },
+          name: 'Demo User',
+          avatar_url: 'https://i.pravatar.cc/150?img=3',
+        }
       };
-
-      localStorage.setItem("user", JSON.stringify(mockUser));
-      setUser(mockUser);
       
-      return { success: true };
+      setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+      });
+      
+      return true;
     } catch (error) {
-      return { success: false, error: "Invalid email or password" };
+      console.error("Login error:", error);
+      toast({
+        title: "Login failed",
+        description: "Please check your credentials and try again",
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const signUp = async (email: string, password: string, name: string) => {
     try {
-      // Create a simulated user
+      setIsLoading(true);
+      // Mock registration
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
       const mockUser: User = {
-        id: "user123",
+        id: 'user123',
         email,
         user_metadata: {
           name,
-        },
+          avatar_url: 'https://i.pravatar.cc/150?img=3',
+        }
       };
-
-      localStorage.setItem("user", JSON.stringify(mockUser));
-      setUser(mockUser);
       
-      return { success: true };
+      setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      
+      toast({
+        title: "Registration successful",
+        description: "Welcome to Estate!",
+      });
+      
+      return true;
     } catch (error) {
-      return { success: false, error: "Failed to create account" };
+      console.error("Registration error:", error);
+      toast({
+        title: "Registration failed",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const signOut = async () => {
-    localStorage.removeItem("user");
+    setIsLoading(true);
+    // Mock sign out
+    await new Promise(resolve => setTimeout(resolve, 500));
     setUser(null);
+    localStorage.removeItem('user');
+    
     toast({
-      title: "Signed out successfully",
+      title: "Logged out",
+      description: "You have been successfully logged out",
     });
+    
+    setIsLoading(false);
   };
 
-  const updateProfile = async (data: Partial<User>) => {
+  const resetPassword = async (email: string) => {
     try {
-      if (!user) return { success: false, error: "Not authenticated" };
+      // Mock password reset
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const updatedUser = {
-        ...user,
-        ...data,
-        user_metadata: {
-          ...user.user_metadata,
-          ...data.user_metadata,
-        }
-      };
+      toast({
+        title: "Password reset email sent",
+        description: "Please check your inbox for instructions",
+      });
       
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      setUser(updatedUser);
-      
-      return { success: true };
+      return true;
     } catch (error) {
-      return { success: false, error: "Failed to update profile" };
+      console.error("Password reset error:", error);
+      toast({
+        title: "Password reset failed",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+      return false;
     }
   };
 
+  const value = {
+    user,
+    isLoading,
+    signIn,
+    signUp,
+    signOut,
+    resetPassword,
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, updateProfile }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Create a hook to use the auth context
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);

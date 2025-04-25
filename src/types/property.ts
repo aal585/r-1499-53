@@ -10,3 +10,5 @@ export interface Property {
   area?: number;
   type?: 'sale' | 'rent';
 }
+
+export type PropertyType = 'sale' | 'rent' | 'all';
