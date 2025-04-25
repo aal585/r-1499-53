@@ -13,9 +13,8 @@ export interface Favorite {
 // Get all favorites for the current user
 export const getUserFavorites = async (userId: string) => {
   try {
-    const queryResult = await supabase
-      .from('favorites')
-      .select('*, properties(*)');
+    const query = supabase.from('favorites').select('*, properties(*)');
+    const queryResult = await query;
     
     return { data: queryResult.data || [], error: queryResult.error };
   } catch (err: any) {
@@ -28,11 +27,9 @@ export const getUserFavorites = async (userId: string) => {
 export const addFavorite = async (userId: string, propertyId: string) => {
   try {
     // Check if already favorited to prevent duplicates
-    const checkResult = await supabase
-      .from('favorites')
-      .select('id');
+    const checkQuery = supabase.from('favorites').select('id');
+    const checkResult = await checkQuery;
     
-    // After awaiting, we don't need to chain .eq directly
     if (checkResult.error) throw checkResult.error;
     
     // Filter results after receiving them
@@ -46,11 +43,12 @@ export const addFavorite = async (userId: string, propertyId: string) => {
       return { success: true, data: existingFavorite, error: null, alreadyExists: true };
     }
     
-    const insertResult = await supabase
+    // Add to favorites
+    const insertQuery = supabase
       .from('favorites')
       .insert({ user_id: userId, property_id: propertyId })
-      .select()
-      .single();
+      .select();
+    const insertResult = await insertQuery;
     
     if (insertResult.error) throw insertResult.error;
     
@@ -74,12 +72,8 @@ export const addFavorite = async (userId: string, propertyId: string) => {
 // Remove a property from favorites
 export const removeFavorite = async (userId: string, propertyId: string) => {
   try {
-    const deleteResult = await supabase
-      .from('favorites')
-      .delete();
-    
-    // Filtering for user_id and property_id needs to be done after getting results
-    // since our mock doesn't fully support chaining
+    const deleteQuery = supabase.from('favorites').delete();
+    const deleteResult = await deleteQuery;
     
     if (deleteResult.error) throw deleteResult.error;
     
@@ -103,9 +97,8 @@ export const removeFavorite = async (userId: string, propertyId: string) => {
 // Check if a property is favorited by the current user
 export const isPropertyFavorite = async (userId: string, propertyId: string) => {
   try {
-    const result = await supabase
-      .from('favorites')
-      .select('id');
+    const query = supabase.from('favorites').select('id');
+    const result = await query;
     
     // Filter after receiving the data
     const isFavorite = result.data && 

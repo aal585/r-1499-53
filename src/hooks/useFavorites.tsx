@@ -38,9 +38,8 @@ export const useFavorites = () => {
     try {
       // First try to use supabase
       try {
-        const { data, error } = await supabase
-          .from('favorites')
-          .select('*, properties(*)');
+        const query = supabase.from('favorites').select('*, properties(*)');
+        const { data, error } = await query;
         
         if (!error && data) {
           // After awaiting the result, we can safely use data
@@ -91,13 +90,9 @@ export const useFavorites = () => {
         setFavorites(favorites.filter((id) => id !== propertyId));
         // Try to delete from supabase if available
         try {
-          const deleteResult = await supabase
-            .from('favorites')
-            .delete();
-          
-          // We don't need to chain additional methods here
-          // as we're awaiting the result directly
-          
+          const deleteQuery = supabase.from('favorites').delete();
+          await deleteQuery;
+          // No need to chain additional methods here
         } catch (error) {
           console.error('Supabase delete failed, using local state only:', error);
         }
@@ -110,14 +105,14 @@ export const useFavorites = () => {
         setFavorites([...favorites, propertyId]);
         // Try to add to supabase if available
         try {
-          await supabase
+          const insertQuery = supabase
             .from('favorites')
             .insert({
               user_id: user.id,
               property_id: propertyId,
               created_at: new Date().toISOString(),
             });
-          
+          await insertQuery;
         } catch (error) {
           console.error('Supabase insert failed, using local state only:', error);
         }
