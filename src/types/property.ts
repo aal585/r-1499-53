@@ -1,6 +1,4 @@
 
-export type PropertyType = 'sale' | 'rent' | 'all';
-
 export interface Property {
   id: string;
   image: string;
@@ -11,11 +9,4 @@ export interface Property {
   bathrooms?: number;
   area?: number;
   type?: 'sale' | 'rent';
-  description?: string;
-  features?: string[];
-  images?: string[];
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
 }

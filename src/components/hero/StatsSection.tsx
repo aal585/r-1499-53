@@ -1,53 +1,38 @@
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import StatCard from "./StatCard";
+import { cn } from "@/lib/utils";
 
 interface StatsSectionProps {
   isVisible: boolean;
 }
 
 const StatsSection = ({ isVisible }: StatsSectionProps) => {
-  const [hoveredStat, setHoveredStat] = useState<number | null>(null);
-  const [animatedValues, setAnimatedValues] = useState<{ [key: number]: string }>({});
-  const [showTooltips, setShowTooltips] = useState(false);
-  
   const stats = [
-    { label: "Properties", value: "1,500+", description: "Luxury properties worldwide" },
-    { label: "Happy Clients", value: "800+", description: "Satisfied homeowners and renters" },
-    { label: "Cities", value: "50+", description: "Major locations across the globe" }
+    { value: "200+", label: "Luxury Properties" },
+    { value: "10K+", label: "Happy Clients" },
+    { value: "15+", label: "Years Experience" },
+    { value: "25+", label: "Cities Covered" }
   ];
-  
-  useEffect(() => {
-    // Animate stats numbers sequentially after initial visibility
-    if (isVisible) {
-      const timer = setTimeout(() => setShowTooltips(true), 2500);
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible]);
 
-  // Function to handle animated count up
-  const handleCountComplete = (index: number, value: string) => {
-    setAnimatedValues(prev => ({ ...prev, [index]: value }));
-  };
-  
   return (
-    <div className="absolute bottom-12 left-0 right-0">
-      <div className="flex justify-center px-4">
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8 w-full max-w-3xl">
+    <div className={cn(
+      "absolute bottom-12 left-0 right-0 bg-white/10 backdrop-blur-md py-6 px-4 transition-all duration-1000 ease-out transform",
+      isVisible ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
+    )}>
+      <div className="container mx-auto max-w-4xl">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
-            <StatCard
-              key={index}
-              label={stat.label}
-              value={stat.value}
-              description={stat.description}
-              index={index}
-              isVisible={isVisible}
-              hoveredStat={hoveredStat}
-              setHoveredStat={setHoveredStat}
-              onCountComplete={handleCountComplete}
-              showTooltip={showTooltips}
-            />
+            <div 
+              key={index} 
+              className="text-center"
+              style={{ 
+                animationDelay: `${800 + index * 100}ms`,
+                opacity: 0,
+                animation: isVisible ? 'fadeIn 0.5s ease-out forwards' : 'none'
+              }}
+            >
+              <div className="text-2xl md:text-3xl font-bold text-white">{stat.value}</div>
+              <div className="text-sm text-white/70">{stat.label}</div>
+            </div>
           ))}
         </div>
       </div>

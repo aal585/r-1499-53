@@ -1,86 +1,63 @@
 
-import { ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import { useNavigate } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface PropertyType {
-  name: string;
-  count: number;
-  icon: string;
+interface PropertyTypeProps {
+  propertyType: {
+    name: string;
+    count: number;
+    icon: string;
+  };
 }
 
-interface PropertyTypeDropdownProps {
-  propertyTypes: PropertyType[];
-  activeTab: 'buy' | 'rent';
-}
-
-const PropertyTypeDropdown = ({ propertyTypes, activeTab }: PropertyTypeDropdownProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+const PropertyTypeDropdown = ({ propertyType }: PropertyTypeProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
+  
+  const handleClick = () => {
+    navigate(`/properties?type=${propertyType.name.toLowerCase()}`);
+  };
   
   return (
-    <div className="mb-4">
-      <NavigationMenu onValueChange={(value) => setIsOpen(value.length > 0)}>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:text-white data-[state=open]:bg-white/20">
-              <motion.span 
-                className="flex items-center gap-1.5"
-                animate={{ y: isOpen ? -2 : 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                Property Type
-                <motion.div
-                  animate={{ rotate: isOpen ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <ChevronDown className="h-4 w-4 opacity-70" />
-                </motion.div>
-              </motion.span>
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <div className="grid grid-cols-2 gap-3 p-4 w-[400px] bg-white/95 backdrop-blur-md rounded-xl shadow-xl">
-                {propertyTypes.map((type, i) => (
-                  <motion.a
-                    key={type.name}
-                    href={`/properties?type=${activeTab === 'buy' ? 'sale' : 'rent'}&property=${type.name.toLowerCase()}`}
-                    className="flex items-center gap-2 p-2 rounded-lg hover:bg-estate-50 transition-colors group"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.05 }}
-                    whileHover={{ 
-                      scale: 1.02,
-                      transition: { duration: 0.2 }
-                    }}
-                  >
-                    <motion.div 
-                      className="flex h-10 w-10 items-center justify-center rounded-md bg-estate-100 text-estate-800 group-hover:bg-estate-200"
-                      whileHover={{ 
-                        rotate: [0, -10, 10, -5, 5, 0],
-                        transition: { duration: 0.5 }
-                      }}
-                    >
-                      <span className="text-lg">{type.icon}</span>
-                    </motion.div>
-                    <div>
-                      <div className="text-sm font-medium text-estate-800">{type.name}</div>
-                      <div className="text-xs text-estate-500">{type.count} listings</div>
-                    </div>
-                    <motion.div 
-                      className="ml-auto opacity-0 group-hover:opacity-100"
-                      initial={{ x: -5 }}
-                      whileHover={{ x: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <div className="bg-estate-800 text-white text-xs px-2 py-0.5 rounded">View</div>
-                    </motion.div>
-                  </motion.a>
-                ))}
-              </div>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+    <div 
+      className="relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
+    >
+      <button className="w-full py-2 group transition-colors duration-300">
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-2xl">{propertyType.icon}</span>
+          <span className="text-sm font-medium group-hover:text-amber-200 transition-colors">
+            {propertyType.name}
+          </span>
+          <div className="flex items-center text-xs text-white/70">
+            <span>{propertyType.count}</span>
+            <ChevronDown 
+              className={cn(
+                "ml-1 w-3 h-3 transition-transform duration-300",
+                isHovered ? "rotate-180" : "rotate-0"
+              )} 
+            />
+          </div>
+        </div>
+      </button>
+      
+      {isHovered && (
+        <div className="absolute top-full left-0 right-0 mt-2 py-2 bg-white/10 backdrop-blur-lg rounded-lg shadow-xl border border-white/10 opacity-0 animate-fadeIn" style={{ animationDuration: '200ms', animationFillMode: 'forwards' }}>
+          <div className="text-xs text-white/80 px-3 py-1 hover:bg-white/10 transition-colors cursor-pointer">
+            New York
+          </div>
+          <div className="text-xs text-white/80 px-3 py-1 hover:bg-white/10 transition-colors cursor-pointer">
+            Los Angeles
+          </div>
+          <div className="text-xs text-white/80 px-3 py-1 hover:bg-white/10 transition-colors cursor-pointer">
+            Miami
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,69 +1,75 @@
 
-import Navbar from "@/components/Navbar";
+import { useState, useEffect } from "react";
 import Hero from "@/components/Hero";
-import AboutUs from "@/components/AboutUs";
-import OurVision from "@/components/OurVision";
-import Testimonials from "@/components/Testimonials";
-import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import ServicesSection from "@/components/ServicesSection";
 import PropertyGrid from "@/components/PropertyGrid";
-import FeaturedProviders from "@/components/FeaturedProviders";
 import FurnitureShowcase from "@/components/FurnitureShowcase";
 import HomeServiceBooking from "@/components/HomeServiceBooking";
-import ServicesSection from "@/components/ServicesSection";
+import FeaturedProviders from "@/components/FeaturedProviders";
+import Testimonials from "@/components/Testimonials";
+import AboutUs from "@/components/AboutUs";
+import OurVision from "@/components/OurVision";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { ChevronUp } from "lucide-react";
 
 const Index = () => {
-  const navigate = useNavigate();
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 500);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="overflow-x-hidden">
       <Navbar />
       <Hero />
       
-      {/* Featured Properties Section */}
-      <section id="properties" className="py-20 bg-white">
+      <div id="properties" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-display text-estate-800 mb-2">Featured Properties</h2>
-              <p className="text-lg text-estate-600">Discover our handpicked selection of premium properties</p>
-            </div>
-            <Button 
-              variant="outline" 
-              className="mt-4 md:mt-0 border-estate-300 text-estate-700 hover:bg-estate-50"
-              onClick={() => navigate("/properties")}
-            >
-              View All Properties
-            </Button>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-display text-estate-800 mb-4">Featured Properties</h2>
+            <p className="text-lg text-estate-600 max-w-3xl mx-auto">
+              Discover our handpicked selection of premium properties
+            </p>
           </div>
           <PropertyGrid />
         </div>
-      </section>
+      </div>
       
-      {/* Complete Services Section */}
       <ServicesSection />
-      
-      {/* About Us */}
-      <AboutUs />
-      
-      {/* Home Services */}
-      <HomeServiceBooking />
-      
-      {/* Furniture Section */}
       <FurnitureShowcase />
-      
-      {/* Service Providers */}
+      <HomeServiceBooking />
       <FeaturedProviders />
-      
-      {/* Our Vision */}
-      <OurVision />
-      
-      {/* Testimonials */}
       <Testimonials />
-      
-      {/* Footer */}
+      <AboutUs />
+      <OurVision />
       <Footer />
+      
+      <Button
+        className={`fixed bottom-6 right-6 rounded-full h-12 w-12 bg-estate-800 text-white shadow-lg transition-all duration-300 flex items-center justify-center p-0 ${
+          showScrollButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 pointer-events-none"
+        }`}
+        onClick={scrollToTop}
+        aria-label="Scroll to top"
+      >
+        <ChevronUp className="h-6 w-6" />
+      </Button>
     </div>
   );
 };
