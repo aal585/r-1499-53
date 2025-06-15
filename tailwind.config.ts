@@ -32,6 +32,11 @@ const config: Config = {
           800: "#2c3e50",
           900: "#1e293b",
         },
+        'vibrant-purple': '#8B5CF6',
+        'vibrant-blue': '#3B82F6',
+        'accent-amber': '#F59E0B',
+        'accent-blue': '#06B6D4',
+        'pastel-blue': '#E0F2FE',
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

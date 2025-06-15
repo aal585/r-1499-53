@@ -1,9 +1,7 @@
 
-import { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, MapPin } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
 
 type ServicesHeaderProps = {
   searchTerm: string;
@@ -12,49 +10,39 @@ type ServicesHeaderProps = {
 
 export default function ServicesHeader({ searchTerm, setSearchTerm }: ServicesHeaderProps) {
   return (
-    <div className="bg-gradient-to-r from-estate-800 via-vibrant-purple to-estate-700 text-white py-16 md:py-24">
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <motion.h1 
-            className="text-4xl md:text-5xl font-display mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Professional Home Services
-          </motion.h1>
-          <motion.p 
-            className="text-estate-200 text-lg mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            Find trusted professionals for all your home service needs.
-          </motion.p>
-          
-          <motion.div 
-            className="relative max-w-2xl mx-auto glass-effect rounded-lg"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-white/70" />
+    <div className="bg-gradient-to-r from-estate-800 to-estate-600 text-white py-16">
+      <div className="container mx-auto px-4 max-w-4xl text-center">
+        <h1 className="text-4xl md:text-5xl font-display mb-4">
+          Professional Home Services
+        </h1>
+        <p className="text-lg md:text-xl text-estate-200 mb-8 max-w-2xl mx-auto">
+          Connect with verified service providers for all your home needs. 
+          From cleaning to renovation, find trusted professionals in your area.
+        </p>
+        
+        <div className="max-w-2xl mx-auto">
+          <div className="flex gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                type="text"
+                placeholder="Search for services, providers..."
+                className="pl-10 py-6 bg-white/90 border-white/30 text-gray-800 placeholder:text-gray-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
-            <Input
-              type="text"
-              placeholder="Search for services or providers..."
-              className="pl-10 py-6 bg-transparent border-white/40 text-white placeholder:text-white/70 rounded-lg focus-visible:ring-white/70"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
             <Button 
-              className="absolute inset-y-2 right-2 bg-white text-estate-800 hover:bg-estate-100"
-              onClick={() => {/* Handle search */}}
+              size="lg"
+              className="px-8 bg-vibrant-blue hover:bg-blue-700"
             >
-              Search
+              <Search className="w-5 h-5" />
             </Button>
-          </motion.div>
+          </div>
+          
+          <div className="flex justify-center mt-4 text-sm text-estate-200">
+            Popular searches: Cleaning • Plumbing • Electrical • Landscaping
+          </div>
         </div>
       </div>
     </div>
