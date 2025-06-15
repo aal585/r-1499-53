@@ -1,248 +1,239 @@
 
-import { useState } from "react";
-import { 
-  CalendarIcon, 
-  Clock, 
-  MapPin, 
-  Phone, 
-  User, 
-  Mail, 
-  MessageSquare 
-} from "lucide-react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "./ui/select";
-import { Calendar } from "./ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "./ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { toast } from "@/hooks/use-toast";
-
-const services = [
-  "Home Maintenance",
-  "Electrical Services",
-  "Plumbing",
-  "Interior Design",
-  "Painting",
-  "Furniture Assembly",
-  "Cleaning Services",
-  "Home Security Installation"
-];
-
-const timeSlots = [
-  "09:00 AM - 12:00 PM",
-  "12:00 PM - 03:00 PM",
-  "03:00 PM - 06:00 PM"
-];
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { CalendarIcon, Clock, User, Phone, Mail, MessageSquare } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { toast } from '@/hooks/use-toast';
 
 const ServiceBookingForm = () => {
-  const [date, setDate] = useState<Date>();
-  const [bookingSubmitted, setBookingSubmitted] = useState(false);
-  
-  const handleSubmit = (e: React.FormEvent) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    service: '',
+    date: undefined as Date | undefined,
+    time: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const serviceCategories = [
+    'Cleaning',
+    'Renovation',
+    'Technology',
+    'Landscaping',
+    'Repair',
+    'Security',
+    'Plumbing',
+    'Electrical',
+    'HVAC'
+  ];
+
+  const timeSlots = [
+    '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+    '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'
+  ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simulate submission
-    setTimeout(() => {
-      setBookingSubmitted(true);
-      toast({
-        title: "Booking Request Submitted",
-        description: "We'll contact you shortly to confirm your appointment.",
-      });
-    }, 1000);
+    setIsSubmitting(true);
+
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    toast({
+      title: "Booking Request Submitted!",
+      description: "We'll contact you within 24 hours to confirm your appointment.",
+    });
+
+    // Reset form
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      service: '',
+      date: undefined,
+      time: '',
+      message: ''
+    });
+
+    setIsSubmitting(false);
   };
-  
-  if (bookingSubmitted) {
-    return (
-      <div className="text-center py-10 px-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-600 mb-4">
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h3 className="text-2xl font-semibold text-estate-800 mb-2">Booking Request Received</h3>
-        <p className="text-estate-600 mb-6 max-w-md mx-auto">
-          Thank you for your booking request. A service representative will contact you shortly to confirm your appointment details.
-        </p>
-        <Button 
-          variant="outline" 
-          className="border-estate-300 text-estate-700 hover:bg-estate-50"
-          onClick={() => setBookingSubmitted(false)}
-        >
-          Book Another Service
-        </Button>
-      </div>
-    );
-  }
-  
+
+  const isFormValid = formData.name && formData.email && formData.phone && formData.service && formData.date && formData.time;
+
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-      <h3 className="text-xl font-semibold text-estate-800 mb-5">Book a Service</h3>
-      
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="block text-sm font-medium text-estate-700 mb-1" htmlFor="service">
-            Service Type
-          </label>
-          <Select required>
-            <SelectTrigger id="service" className="w-full">
-              <SelectValue placeholder="Select service" />
+    <motion.div 
+      className="bg-white p-6 rounded-xl soft-shadow border border-gray-100"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold text-estate-800 mb-2">Book a Service</h3>
+        <p className="text-estate-600 text-sm">
+          Schedule an appointment with our trusted service providers
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="name" className="flex items-center gap-2">
+              <User className="w-4 h-4" />
+              Full Name *
+            </Label>
+            <Input
+              id="name"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              placeholder="Enter your name"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phone" className="flex items-center gap-2">
+              <Phone className="w-4 h-4" />
+              Phone Number *
+            </Label>
+            <Input
+              id="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={(e) => setFormData({...formData, phone: e.target.value})}
+              placeholder="(555) 123-4567"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="email" className="flex items-center gap-2">
+            <Mail className="w-4 h-4" />
+            Email Address *
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({...formData, email: e.target.value})}
+            placeholder="your@email.com"
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            <MessageSquare className="w-4 h-4" />
+            Service Category *
+          </Label>
+          <Select value={formData.service} onValueChange={(value) => setFormData({...formData, service: value})}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a service" />
             </SelectTrigger>
             <SelectContent>
-              {services.map(service => (
-                <SelectItem key={service} value={service.toLowerCase().replace(/\s+/g, '-')}>
-                  {service}
+              {serviceCategories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div>
-            <label className="block text-sm font-medium text-estate-700 mb-1">
-              Preferred Date
-            </label>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <CalendarIcon className="w-4 h-4" />
+              Preferred Date *
+            </Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal border-estate-200",
-                    !date && "text-muted-foreground"
+                    "w-full justify-start text-left font-normal",
+                    !formData.date && "text-muted-foreground"
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Select date</span>}
+                  {formData.date ? format(formData.date, "PPP") : "Pick a date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
+              <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
+                  selected={formData.date}
+                  onSelect={(date) => setFormData({...formData, date})}
                   disabled={(date) => date < new Date()}
+                  initialFocus
                 />
               </PopoverContent>
             </Popover>
           </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-estate-700 mb-1" htmlFor="time">
-              Preferred Time
-            </label>
-            <Select required>
-              <SelectTrigger id="time" className="w-full">
-                <SelectValue placeholder="Select time slot" />
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              Preferred Time *
+            </Label>
+            <Select value={formData.time} onValueChange={(value) => setFormData({...formData, time: value})}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select time" />
               </SelectTrigger>
               <SelectContent>
-                {timeSlots.map(slot => (
-                  <SelectItem key={slot} value={slot}>
-                    {slot}
+                {timeSlots.map((time) => (
+                  <SelectItem key={time} value={time}>
+                    {time}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
         </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-estate-700 mb-1" htmlFor="address">
-            Service Address
-          </label>
-          <div className="flex">
-            <div className="relative flex-grow">
-              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-estate-400 h-4 w-4" />
-              <Input 
-                id="address"
-                placeholder="Enter your address"
-                className="pl-10 border-estate-200"
-                required
-              />
+
+        <div className="space-y-2">
+          <Label htmlFor="message">
+            Additional Details
+          </Label>
+          <Textarea
+            id="message"
+            value={formData.message}
+            onChange={(e) => setFormData({...formData, message: e.target.value})}
+            placeholder="Describe your service needs, special requirements, or questions..."
+            rows={3}
+          />
+        </div>
+
+        <Button 
+          type="submit" 
+          className="w-full bg-vibrant-purple hover:bg-purple-700"
+          disabled={!isFormValid || isSubmitting}
+        >
+          {isSubmitting ? (
+            <div className="flex items-center gap-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              Submitting...
             </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div>
-            <label className="block text-sm font-medium text-estate-700 mb-1" htmlFor="name">
-              Your Name
-            </label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-estate-400 h-4 w-4" />
-              <Input 
-                id="name"
-                placeholder="Enter your name"
-                className="pl-10 border-estate-200"
-                required
-              />
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-estate-700 mb-1" htmlFor="phone">
-              Phone Number
-            </label>
-            <div className="relative">
-              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-estate-400 h-4 w-4" />
-              <Input 
-                id="phone"
-                type="tel"
-                placeholder="Enter your phone number"
-                className="pl-10 border-estate-200"
-                required
-              />
-            </div>
-          </div>
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-estate-700 mb-1" htmlFor="email">
-            Email Address
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-estate-400 h-4 w-4" />
-            <Input 
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              className="pl-10 border-estate-200"
-              required
-            />
-          </div>
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-estate-700 mb-1" htmlFor="notes">
-            Service Notes
-          </label>
-          <div className="relative">
-            <MessageSquare className="absolute left-3 top-3 text-estate-400 h-4 w-4" />
-            <Textarea 
-              id="notes"
-              placeholder="Describe what you need help with"
-              className="pl-10 border-estate-200 min-h-[100px]"
-            />
-          </div>
-        </div>
-        
-        <Button type="submit" className="w-full bg-estate-800 hover:bg-estate-700 text-white">
-          Book Service
+          ) : (
+            'Request Service Booking'
+          )}
         </Button>
+
+        <p className="text-xs text-estate-500 text-center">
+          We'll review your request and contact you within 24 hours to confirm availability and pricing.
+        </p>
       </form>
-    </div>
+    </motion.div>
   );
 };
 

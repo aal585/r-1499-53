@@ -1,99 +1,112 @@
+
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ServiceCategories from '@/components/ServiceCategories';
-import FeaturedProviders from '@/components/FeaturedProviders';
-import FeaturedServices from '@/components/services/FeaturedServices';
-import ServiceHighlights from '@/components/services/ServiceHighlights';
-import ServiceCompare from '@/components/services/ServiceCompare';
-import { ServiceFilters } from '@/components/services/ServiceFilter';
-import { ServiceProvider } from '@/components/services/ServiceCard';
 import ServicesHeader from '@/components/services/ServicesHeader';
 import ServicesContent from '@/components/services/ServicesContent';
 import ServicesSidebar from '@/components/services/ServicesSidebar';
+import FeaturedServices from '@/components/services/FeaturedServices';
+import { ServiceProvider } from '@/components/services/ServiceCard';
 
+export interface ServiceFilters {
+  categories: string[];
+  availability: string[];
+  ratings: string[];
+  sortBy: string;
+}
+
+// Complete service providers data
 const serviceProviders: ServiceProvider[] = [
   {
     id: '1',
-    name: 'Johnson Electrical Services',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&q=75&fit=crop&w=120',
-    category: 'Electrical',
+    name: 'Premium Home Cleaning Co.',
+    category: 'Cleaning',
     rating: 4.9,
-    reviews: 120,
-    location: 'Beverly Hills, CA',
+    reviews: 156,
+    location: 'Downtown Area',
+    price: 'From $120/service',
+    image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&q=75&fit=crop&w=300',
+    services: ['Deep Cleaning', 'Regular Maintenance', 'Move-in/Move-out'],
     availableToday: true,
-    description: 'Expert electrician with over 15 years of experience. Specializing in residential and commercial services.',
-    services: ['Wiring', 'Lighting', 'Panel Upgrades', 'Troubleshooting'],
     verified: true,
-    price: 'From $85/hr',
+    experience: '8 years',
+    description: 'Professional cleaning services with eco-friendly products and attention to detail.'
   },
   {
     id: '2',
-    name: 'Professional Plumbing Co.',
-    image: 'https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?auto=format&q=75&fit=crop&w=120',
-    category: 'Plumbing',
-    rating: 4.7,
-    reviews: 85,
-    location: 'Santa Monica, CA',
+    name: 'Elite Renovation Services',
+    category: 'Renovation',
+    rating: 4.8,
+    reviews: 89,
+    location: 'City Center',
+    price: 'Custom quotes',
+    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&q=75&fit=crop&w=300',
+    services: ['Kitchen Remodeling', 'Bathroom Renovation', 'Home Extensions'],
     availableToday: false,
-    description: 'Licensed plumbers providing quality service. Emergency services available 24/7.',
-    services: ['Repairs', 'Installation', 'Drain Cleaning', 'Water Heaters'],
     verified: true,
-    price: 'From $95/hr',
+    experience: '12 years',
+    description: 'Transform your space with our premium renovation and remodeling services.'
   },
   {
     id: '3',
-    name: 'Master Home Painters',
-    image: 'https://images.unsplash.com/photo-1506863530036-1efeddceb993?auto=format&q=75&fit=crop&w=120',
-    category: 'Painting',
-    rating: 4.8,
-    reviews: 92,
-    location: 'Malibu, CA',
+    name: 'Smart Home Tech Solutions',
+    category: 'Technology',
+    rating: 4.7,
+    reviews: 203,
+    location: 'Tech District',
+    price: 'From $250/installation',
+    image: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&q=75&fit=crop&w=300',
+    services: ['Smart Home Setup', 'Security Systems', 'Home Automation'],
     availableToday: true,
-    description: 'Professional painters delivering exceptional results. Interior and exterior painting services.',
-    services: ['Interior', 'Exterior', 'Decorative', 'Cabinet Refinishing'],
-    price: 'From $65/hr',
+    verified: true,
+    experience: '6 years',
+    description: 'Turn your home into a smart living space with cutting-edge technology.'
   },
   {
     id: '4',
-    name: 'Reliable Home Maintenance',
-    image: 'https://images.unsplash.com/photo-1567515004624-219c11d31f2e?auto=format&q=75&fit=crop&w=120',
-    category: 'Maintenance',
+    name: 'GreenThumb Landscaping',
+    category: 'Landscaping',
     rating: 4.6,
-    reviews: 78,
-    location: 'Brentwood, CA',
+    reviews: 124,
+    location: 'Suburban Area',
+    price: 'From $80/hour',
+    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&q=75&fit=crop&w=300',
+    services: ['Garden Design', 'Lawn Maintenance', 'Tree Services'],
     availableToday: true,
-    description: 'Comprehensive home maintenance services. From repairs to improvements, we do it all.',
-    services: ['Repairs', 'Installations', 'Carpentry', 'Handyman Services'],
     verified: true,
+    experience: '10 years',
+    description: 'Professional landscaping services to create your dream outdoor space.'
   },
   {
     id: '5',
-    name: 'Green Landscape Design',
-    image: 'https://images.unsplash.com/photo-1622818425825-3b63a3e0ac22?auto=format&q=75&fit=crop&w=120',
-    category: 'Landscaping',
-    rating: 4.9,
-    reviews: 65,
-    location: 'Pacific Palisades, CA',
-    availableToday: false,
-    description: 'Transform your outdoor space with our expert landscape design and maintenance services.',
-    services: ['Design', 'Planting', 'Maintenance', 'Irrigation'],
-    price: 'From $120/hr',
+    name: 'Fix-It-Fast Repairs',
+    category: 'Repair',
+    rating: 4.5,
+    reviews: 267,
+    location: 'Multiple Locations',
+    price: 'From $60/hour',
+    image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&q=75&fit=crop&w=300',
+    services: ['Plumbing', 'Electrical', 'HVAC', 'General Repairs'],
+    availableToday: true,
+    verified: true,
+    experience: '15 years',
+    description: 'Quick and reliable repair services for all your home maintenance needs.'
   },
   {
     id: '6',
-    name: 'Security Solutions',
-    image: 'https://images.unsplash.com/photo-1584941648665-effee21a2651?auto=format&q=75&fit=crop&w=120',
+    name: 'Secure Guard Services',
     category: 'Security',
-    rating: 4.7,
-    reviews: 56,
-    location: 'Hollywood, CA',
-    availableToday: true,
-    description: 'Protect your home with state-of-the-art security systems and professional installation.',
-    services: ['Alarms', 'Cameras', 'Smart Locks', 'Monitoring'],
+    rating: 4.8,
+    reviews: 92,
+    location: 'Metropolitan Area',
+    price: 'From $200/month',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&q=75&fit=crop&w=300',
+    services: ['Home Security', '24/7 Monitoring', 'Camera Installation'],
+    availableToday: false,
     verified: true,
-    price: 'Packages from $299',
-  },
+    experience: '20 years',
+    description: 'Comprehensive security solutions to protect your home and family.'
+  }
 ];
 
 const Services = () => {
@@ -107,38 +120,16 @@ const Services = () => {
   const [activeTab, setActiveTab] = useState('all');
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <Navbar />
       
-      {/* Hero with gradient background */}
-      <ServicesHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      
-      {/* Service Categories */}
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-display text-estate-800 mb-8 text-center">Browse Service Categories</h2>
-          <ServiceCategories />
-        </div>
-      </section>
-      
-      {/* Featured Services Section */}
-      <FeaturedServices />
-      
-      {/* Service Compare Section */}
-      <section className="py-8 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <ServiceCompare providers={serviceProviders} />
-        </div>
-      </section>
-      
-      {/* Service Highlights Section */}
-      <ServiceHighlights />
-      
-      {/* Main Content */}
-      <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Left column - Service providers */}
+      <div className="pt-16">
+        <ServicesHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        
+        <FeaturedServices />
+        
+        <div className="container mx-auto px-4 py-16">
+          <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
             <ServicesContent 
               providers={serviceProviders}
               searchTerm={searchTerm}
@@ -147,14 +138,11 @@ const Services = () => {
               activeTab={activeTab}
               setActiveTab={setActiveTab}
             />
-            
-            {/* Right column - Booking form */}
             <ServicesSidebar />
           </div>
         </div>
-      </section>
-
-      <FeaturedProviders />
+      </div>
+      
       <Footer />
     </div>
   );
