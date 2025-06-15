@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -70,6 +69,100 @@ const furnitureData = {
       "Assembly": "30 minutes assembly time",
       "Care": "Wipe clean with damp cloth"
     }
+  },
+  "3": {
+    id: "3",
+    name: "Ergonomic Office Chair",
+    category: "Office",
+    price: 599,
+    salePrice: 449,
+    images: [
+      "https://images.unsplash.com/photo-1541558869434-2840d308329a?auto=format&q=75&fit=crop&w=800",
+      "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?auto=format&q=75&fit=crop&w=800"
+    ],
+    rating: 4.9,
+    reviews: 128,
+    onSale: true,
+    description: "Premium ergonomic design with lumbar support and breathable mesh back. Perfect for long work sessions.",
+    features: ["Lumbar support", "Breathable mesh", "Height adjustable", "360° swivel"],
+    colors: ["Black", "Gray", "White"],
+    dimensions: "26\"W x 26\"D x 40-44\"H",
+    specifications: {
+      "Material": "Mesh and high-grade plastic",
+      "Weight capacity": "300 lbs",
+      "Wheels": "Smooth-rolling casters",
+      "Warranty": "5-year manufacturer warranty"
+    }
+  },
+  "4": {
+    id: "4",
+    name: "Rustic Dining Table",
+    category: "Dining Room",
+    price: 899,
+    images: [
+      "https://images.unsplash.com/photo-1449247613801-f8091ade433b?auto=format&q=75&fit=crop&w=800",
+      "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?auto=format&q=75&fit=crop&w=800"
+    ],
+    rating: 4.7,
+    reviews: 89,
+    onSale: false,
+    description: "Handcrafted from reclaimed wood with natural finish. Seats up to 6 people comfortably.",
+    features: ["Reclaimed wood", "Natural finish", "Seats 6", "Handcrafted"],
+    colors: ["Natural", "Dark Walnut"],
+    dimensions: "72\"L x 36\"W x 30\"H",
+    specifications: {
+      "Material": "Reclaimed hardwood",
+      "Finish": "Natural wood stain",
+      "Weight": "120 lbs",
+      "Care": "Regular wood polish recommended"
+    }
+  },
+  "5": {
+    id: "5",
+    name: "Memory Foam Mattress",
+    category: "Bedroom",
+    price: 799,
+    salePrice: 599,
+    images: [
+      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&q=75&fit=crop&w=800",
+      "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?auto=format&q=75&fit=crop&w=800"
+    ],
+    rating: 4.8,
+    reviews: 156,
+    onSale: true,
+    description: "Premium memory foam with cooling gel technology. Medium-firm support for optimal comfort.",
+    features: ["Cooling gel", "Memory foam", "Medium-firm", "10-year warranty"],
+    colors: ["White"],
+    dimensions: "60\"W x 80\"L x 12\"H (Queen)",
+    specifications: {
+      "Material": "Memory foam with gel infusion",
+      "Firmness": "Medium-firm",
+      "Thickness": "12 inches",
+      "Trial": "100-night sleep trial"
+    }
+  },
+  "6": {
+    id: "6",
+    name: "Modern Bookshelf",
+    category: "Office",
+    price: 399,
+    images: [
+      "https://images.unsplash.com/photo-1594736797933-d0e501ba2fe8?auto=format&q=75&fit=crop&w=800",
+      "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?auto=format&q=75&fit=crop&w=800"
+    ],
+    rating: 4.5,
+    reviews: 73,
+    onSale: false,
+    description: "Sleek 5-shelf design with clean lines. Perfect for displaying books, decor, and storage.",
+    features: ["5 shelves", "Modern design", "Easy assembly", "Versatile storage"],
+    colors: ["White", "Black", "Walnut"],
+    dimensions: "32\"W x 12\"D x 72\"H",
+    specifications: {
+      "Material": "Engineered wood",
+      "Shelves": "5 adjustable shelves",
+      "Weight capacity": "40 lbs per shelf",
+      "Assembly": "Tools included"
+    }
   }
 };
 
@@ -99,7 +192,7 @@ const FurnitureDetail = () => {
     );
   }
 
-  const currentPrice = furniture.onSale ? furniture.salePrice! : furniture.price;
+  const currentPrice = furniture.onSale && furniture.salePrice ? furniture.salePrice : furniture.price;
 
   const handleAddToCart = () => {
     toast({
@@ -190,7 +283,7 @@ const FurnitureDetail = () => {
               </div>
               
               <div className="flex items-center space-x-4 mb-6">
-                {furniture.onSale ? (
+                {furniture.onSale && furniture.salePrice ? (
                   <>
                     <span className="text-3xl font-bold text-estate-800">${currentPrice}</span>
                     <span className="text-xl text-gray-500 line-through">${furniture.price}</span>
