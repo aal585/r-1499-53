@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -192,7 +193,7 @@ const FurnitureDetail = () => {
     );
   }
 
-  const currentPrice = furniture.onSale && furniture.salePrice ? furniture.salePrice : furniture.price;
+  const currentPrice = (furniture as any).salePrice || furniture.price;
 
   const handleAddToCart = () => {
     toast({
@@ -283,7 +284,7 @@ const FurnitureDetail = () => {
               </div>
               
               <div className="flex items-center space-x-4 mb-6">
-                {furniture.onSale && furniture.salePrice ? (
+                {(furniture as any).salePrice ? (
                   <>
                     <span className="text-3xl font-bold text-estate-800">${currentPrice}</span>
                     <span className="text-xl text-gray-500 line-through">${furniture.price}</span>
