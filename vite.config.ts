@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -8,6 +9,24 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    watch: {
+      // Reduce file watching overhead
+      usePolling: false,
+      interval: 1000,
+      ignored: [
+        '**/node_modules/**',
+        '**/.git/**',
+        '**/dist/**',
+        '**/build/**',
+        '**/.next/**',
+        '**/.cache/**',
+        '**/coverage/**',
+        '**/.nyc_output/**',
+        '**/*.log',
+        '**/.DS_Store',
+        '**/Thumbs.db'
+      ]
+    }
   },
   plugins: [
     react(),
@@ -18,4 +37,25 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Optimize build and file handling
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@tanstack/react-query',
+      'lucide-react'
+    ]
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['lucide-react', '@radix-ui/react-slot']
+        }
+      }
+    }
+  }
 }));
