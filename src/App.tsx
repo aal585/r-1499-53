@@ -18,6 +18,7 @@ const Register = lazy(() => import("./pages/Register"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AddProperty = lazy(() => import("./pages/AddProperty"));
 const Furniture = lazy(() => import("./pages/Furniture"));
+const FurnitureDetail = lazy(() => import("./pages/FurnitureDetail"));
 const Services = lazy(() => import("./pages/Services"));
 const ServiceCategory = lazy(() => import("./pages/ServiceCategory"));
 const ServiceProviderDetails = lazy(() => import("./pages/ServiceProviderDetails"));
@@ -73,6 +74,7 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/add-property" element={<AddProperty />} />
               <Route path="/furniture" element={<Furniture />} />
+              <Route path="/furniture/:id" element={<FurnitureDetail />} />
               <Route path="/services" element={<Services />} />
               <Route path="/services/:category" element={<ServiceCategory />} />
               <Route path="/providers/:id" element={<ServiceProviderDetails />} />
