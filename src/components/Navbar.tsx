@@ -1,5 +1,5 @@
 
-import { Menu, LogIn, LogOut, UserCircle } from "lucide-react";
+import { Menu, LogIn, LogOut, UserCircle, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,6 +16,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -25,14 +33,21 @@ const Navbar = () => {
   // Determine if this is the home page (for styling)
   const isHomePage = location.pathname === "/";
 
-  const handleGetStarted = () => {
-    navigate("/contact");
-  };
-
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
   };
+
+  const serviceCategories = [
+    { name: "Home Maintenance", path: "/services/maintenance" },
+    { name: "Electrical", path: "/services/electrical" },
+    { name: "Plumbing", path: "/services/plumbing" },
+    { name: "Painting", path: "/services/painting" },
+    { name: "Cleaning", path: "/services/cleaning" },
+    { name: "Moving", path: "/services/moving" },
+    { name: "Security", path: "/services/security" },
+    { name: "Landscaping", path: "/services/landscaping" },
+  ];
 
   return (
     <nav className={`${isHomePage ? 'absolute' : ''} w-full z-50 ${!isHomePage ? 'bg-estate-800 py-4' : ''}`}>
@@ -43,8 +58,43 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
             <Link to="/properties" className="text-white hover:text-white/80 transition-colors font-medium">Properties</Link>
-            <Link to="/about" className="text-white hover:text-white/80 transition-colors font-medium">About</Link>
-            <Link to="/#testimonials" className="text-white hover:text-white/80 transition-colors font-medium">Testimonials</Link>
+            
+            {/* Services Dropdown */}
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="bg-transparent text-white hover:text-white/80 hover:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10">
+                    Services
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className="bg-white border border-gray-200 shadow-lg min-w-[300px] z-50">
+                    <div className="grid grid-cols-2 gap-2 p-4">
+                      <div className="col-span-2 mb-2">
+                        <NavigationMenuLink asChild>
+                          <Link 
+                            to="/services" 
+                            className="block px-3 py-2 text-estate-800 hover:bg-estate-50 rounded-md font-medium transition-colors"
+                          >
+                            All Services
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                      {serviceCategories.map((category) => (
+                        <NavigationMenuLink key={category.name} asChild>
+                          <Link 
+                            to={category.path}
+                            className="block px-3 py-2 text-estate-600 hover:bg-estate-50 hover:text-estate-800 rounded-md text-sm transition-colors"
+                          >
+                            {category.name}
+                          </Link>
+                        </NavigationMenuLink>
+                      ))}
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+
+            <Link to="/furniture" className="text-white hover:text-white/80 transition-colors font-medium">Furniture</Link>
             <Link to="/contact" className="text-white hover:text-white/80 transition-colors font-medium">Contact</Link>
             
             {user ? (
@@ -54,7 +104,7 @@ const Navbar = () => {
                     <UserCircle className="h-5 w-5 text-white" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg z-50">
                   <DropdownMenuLabel>
                     <div className="font-normal text-sm text-gray-500">Signed in as</div>
                     <div className="font-medium truncate">{user?.user_metadata?.name || user?.email}</div>
@@ -100,12 +150,28 @@ const Navbar = () => {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent>
+              <SheetContent className="bg-white">
                 <div className="flex flex-col space-y-6 mt-12">
-                  <Link to="/properties" className="text-lg font-medium">Properties</Link>
-                  <Link to="/about" className="text-lg font-medium">About</Link>
-                  <Link to="/#testimonials" className="text-lg font-medium">Testimonials</Link>
-                  <Link to="/contact" className="text-lg font-medium">Contact</Link>
+                  <Link to="/properties" className="text-lg font-medium text-estate-800">Properties</Link>
+                  
+                  {/* Mobile Services Dropdown */}
+                  <div className="space-y-2">
+                    <Link to="/services" className="text-lg font-medium text-estate-800 block">All Services</Link>
+                    <div className="ml-4 space-y-2">
+                      {serviceCategories.slice(0, 6).map((category) => (
+                        <Link 
+                          key={category.name}
+                          to={category.path} 
+                          className="block text-sm text-estate-600 hover:text-estate-800"
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <Link to="/furniture" className="text-lg font-medium text-estate-800">Furniture</Link>
+                  <Link to="/contact" className="text-lg font-medium text-estate-800">Contact</Link>
                   
                   {user ? (
                     <div className="space-y-4 pt-4 border-t">
