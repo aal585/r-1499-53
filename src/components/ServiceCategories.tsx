@@ -90,14 +90,16 @@ const ServiceCategories = () => {
       {categories.map((category, index) => (
         <div 
           key={category.id}
-          className="flex flex-col items-center justify-center cursor-pointer opacity-0 animate-fadeIn"
+          className="flex flex-col items-center justify-center cursor-pointer opacity-0 animate-fadeIn group"
           style={{ animationDelay: `${index * 100}ms` }}
           onClick={() => handleCategoryClick(category.id)}
         >
-          <div className={`w-16 h-16 rounded-full ${category.color} text-white flex items-center justify-center mb-2 transform transition-transform hover:scale-110`}>
+          <div className={`w-16 h-16 rounded-full ${category.color} text-white flex items-center justify-center mb-2 transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
             <category.icon className="w-8 h-8" />
           </div>
-          <span className="text-sm font-medium text-estate-800 text-center">{category.name}</span>
+          <span className="text-sm font-medium text-estate-800 text-center group-hover:text-estate-600 transition-colors">
+            {category.name}
+          </span>
         </div>
       ))}
     </div>

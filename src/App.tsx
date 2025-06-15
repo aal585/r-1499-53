@@ -19,6 +19,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AddProperty = lazy(() => import("./pages/AddProperty"));
 const Furniture = lazy(() => import("./pages/Furniture"));
 const Services = lazy(() => import("./pages/Services"));
+const ServiceCategory = lazy(() => import("./pages/ServiceCategory"));
 const ServiceProviderDetails = lazy(() => import("./pages/ServiceProviderDetails"));
 
 // Error boundary fallback
@@ -73,6 +74,7 @@ const App = () => (
               <Route path="/add-property" element={<AddProperty />} />
               <Route path="/furniture" element={<Furniture />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/services/:category" element={<ServiceCategory />} />
               <Route path="/providers/:id" element={<ServiceProviderDetails />} />
               <Route path="*" element={<ErrorFallback />} />
             </Routes>

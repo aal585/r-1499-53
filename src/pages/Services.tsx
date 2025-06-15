@@ -6,7 +6,11 @@ import ServicesHeader from '@/components/services/ServicesHeader';
 import ServicesContent from '@/components/services/ServicesContent';
 import ServicesSidebar from '@/components/services/ServicesSidebar';
 import FeaturedServices from '@/components/services/FeaturedServices';
+import ServiceRequestForm from '@/components/services/ServiceRequestForm';
 import { ServiceProvider } from '@/components/services/ServiceCard';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Plus, Search, Briefcase } from 'lucide-react';
 
 export interface ServiceFilters {
   categories: string[];
@@ -118,6 +122,7 @@ const Services = () => {
     sortBy: 'rating',
   });
   const [activeTab, setActiveTab] = useState('all');
+  const [mainTab, setMainTab] = useState('browse');
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -128,17 +133,94 @@ const Services = () => {
         
         <FeaturedServices />
         
-        <div className="container mx-auto px-4 py-16">
-          <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
-            <ServicesContent 
-              providers={serviceProviders}
-              searchTerm={searchTerm}
-              filters={filters}
-              setFilters={setFilters}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-            <ServicesSidebar />
+        {/* Main Service Tabs */}
+        <div className="container mx-auto px-4 py-8">
+          <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
+            <div className="flex justify-center mb-8">
+              <TabsList className="grid w-full max-w-md grid-cols-2">
+                <TabsTrigger value="browse" className="flex items-center gap-2">
+                  <Search className="w-4 h-4" />
+                  Browse Services
+                </TabsTrigger>
+                <TabsTrigger value="request" className="flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  Request Service
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            <TabsContent value="browse">
+              <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
+                <ServicesContent 
+                  providers={serviceProviders}
+                  searchTerm={searchTerm}
+                  filters={filters}
+                  setFilters={setFilters}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                />
+                <ServicesSidebar />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="request">
+              <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-display text-estate-800 mb-4">
+                    Request a Custom Service
+                  </h2>
+                  <p className="text-lg text-estate-600 max-w-2xl mx-auto">
+                    Can't find exactly what you need? Tell us about your project and we'll connect you 
+                    with qualified professionals who can help.
+                  </p>
+                </div>
+                <ServiceRequestForm />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="bg-estate-50 py-16">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h3 className="text-2xl font-display text-estate-800 mb-8">
+              Need Help Finding the Right Service?
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Button 
+                variant="outline" 
+                className="h-auto py-6 px-6 flex flex-col items-center gap-3"
+                onClick={() => setMainTab('request')}
+              >
+                <Plus className="w-8 h-8 text-vibrant-blue" />
+                <div>
+                  <div className="font-semibold">Custom Request</div>
+                  <div className="text-sm text-estate-600">Tell us what you need</div>
+                </div>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="h-auto py-6 px-6 flex flex-col items-center gap-3"
+              >
+                <Briefcase className="w-8 h-8 text-vibrant-purple" />
+                <div>
+                  <div className="font-semibold">Emergency Service</div>
+                  <div className="text-sm text-estate-600">Urgent help available</div>
+                </div>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="h-auto py-6 px-6 flex flex-col items-center gap-3"
+              >
+                <Search className="w-8 h-8 text-accent-amber" />
+                <div>
+                  <div className="font-semibold">Browse Categories</div>
+                  <div className="text-sm text-estate-600">Explore all services</div>
+                </div>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
