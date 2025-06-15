@@ -1,4 +1,3 @@
-
 import { Property } from "@/types/property";
 
 export const allProperties: Property[] = [
@@ -89,5 +88,38 @@ export const allProperties: Property[] = [
     bathrooms: 4.5,
     area: 5200,
     type: 'sale',
+  },
+  {
+    id: "9",
+    image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&q=75&fit=crop&w=800",
+    title: "Evergreen Trail House",
+    location: "Grand Teton, Wyoming",
+    price: "$870,000",
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 2100,
+    type: "sale",
+  },
+  {
+    id: "10",
+    image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&q=75&fit=crop&w=800",
+    title: "River Crossing Retreat",
+    location: "Shenandoah, Virginia",
+    price: "$545,000",
+    bedrooms: 2,
+    bathrooms: 1,
+    area: 1600,
+    type: "sale",
+  },
+  {
+    id: "11",
+    image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?auto=format&q=75&fit=crop&w=800",
+    title: "Mountain Path Hideaway",
+    location: "Blue Ridge, Georgia",
+    price: "$430,000",
+    bedrooms: 2,
+    bathrooms: 1.5,
+    area: 1400,
+    type: "rent",
   },
 ];
