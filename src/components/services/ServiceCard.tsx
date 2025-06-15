@@ -24,6 +24,7 @@ export type ServiceProvider = {
   services: string[];
   verified?: boolean;
   price?: string;
+  experience?: string;
 };
 
 type ServiceCardProps = {

@@ -130,8 +130,15 @@ const HeroContent = ({ isVisible, activeTab, setActiveTab, propertyTypes, handle
           </Button>
         </div>
 
-        {/* Property Type Dropdown */}
-        <PropertyTypeDropdown propertyTypes={propertyTypes} />
+        {/* Property Type Dropdown - Fixed to pass individual propertyType */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+          {propertyTypes.map((propertyType) => (
+            <PropertyTypeDropdown 
+              key={propertyType.name} 
+              propertyType={propertyType} 
+            />
+          ))}
+        </div>
 
         {/* Get Started Button */}
         <motion.div
